@@ -1,0 +1,1 @@
+/home/tahir/Documents/GitHub/shop.co-shopify-theme/AGENTS.md
