@@ -12,9 +12,14 @@
     "main": {
       "type": "hello-world",
       "settings": {}
+    },
+    "partners": {
+      "type": "partners",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "partners"
   ]
 }
