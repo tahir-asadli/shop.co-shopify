@@ -41,4 +41,4 @@ start:
 	@echo "Starting development environment..."
 	npx concurrently \
 		"npx @tailwindcss/cli -i $(TAILWIND_INPUT) -o $(TAILWIND_OUTPUT) --watch" \
-		"shopify theme dev --store $(SHOPIFY_STORE)"
+		"shopify theme dev --store $(SHOPIFY_STORE) --theme shopco"

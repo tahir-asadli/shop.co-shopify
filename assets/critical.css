@@ -96,10 +96,10 @@ body {
   --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
 
   /* This is required to make <img> elements work as background images */
-  position: relative;
+  /* position: relative;
   grid-template-columns: var(--content-grid);
   display: grid;
-  width: 100%;
+  width: 100%; */
 }
 
 /* Child elements, by default, are constrained to the central column of the grid. */
