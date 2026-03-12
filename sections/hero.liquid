@@ -13,9 +13,11 @@
 {% endcomment %}
 
 <section
-  class="hero-section w-full bg-slate-100 relative"
+  class="hero-section w-full {{ section.settings.background_color }} relative"
   {% if section.settings.background_image %}
     style="background-image: url({{ section.settings.background_image | image_url: width: 2000 }}); background-size: cover; background-position: center;"
+  {% else %}
+    style="background-color: {{ section.settings.background_color }};"
   {% endif %}
 >
   <div class="container px-4 pt-8 md:pt-16">
@@ -23,7 +25,7 @@
       <!-- Left Content -->
       <div class="flex flex-col gap-6">
         <!-- Heading -->
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-black">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-black font-anton">
           {{ section.settings.heading }}
         </h1>
         <!-- Description -->
@@ -58,7 +60,7 @@
       <!-- Right Image -->
       <div class="flex justify-center md:justify-end">
         {% if section.settings.hero_image != blank %}
-          {{ section.settings.hero_image |image_url: width: , height: | image_tag: width: 800, height: 600 }}
+          {{ section.settings.hero_image | image_url: width: 800, height: 600 | image_tag: width: 800, height: 600 }}
         {% else %}
           <img
             src="{{ 'hero.png' | asset_url }}"
@@ -77,6 +79,12 @@
 {
   "name": "Hero",
   "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F2F0F1"
+    },
     {
       "type": "image_picker",
       "id": "background_image",
