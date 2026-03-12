@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @import './fonts/satoshi.css';
-@source '../*.html';
+@source "../templates/**/*.liquid";
+@source "../sections/**/*.liquid";
+@source "../snippets/**/*.liquid";
+@source "../layout/**/*.liquid";
+@source "../config/*.json";
 
 @theme {
   --font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
