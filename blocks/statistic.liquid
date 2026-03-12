@@ -1,0 +1,48 @@
+{% doc %}
+  Renders a statistic item with a value and label.
+
+  This block displays a single statistic within a statistics grid,
+  typically used in the hero section.
+
+  @param {string} stat_value - The numerical value or metric for the statistic
+  @param {string} stat_label - The descriptive label for the statistic
+
+  @example
+  {% content_for 'block', type: 'statistic', id: 'stat-1' %}
+{% enddoc %}
+
+<div {{ block.shopify_attributes }}>
+  <p class="text-2xl md:text-3xl font-bold text-black">
+    {{ block.settings.stat_value }}
+  </p>
+  <p class="text-sm text-gray-600">
+    {{ block.settings.stat_label }}
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Statistic",
+  "settings": [
+    {
+      "type": "text",
+      "id": "stat_value",
+      "label": "Statistic Value",
+      "placeholder": "e.g., 200+",
+      "default": "0"
+    },
+    {
+      "type": "text",
+      "id": "stat_label",
+      "label": "Statistic Label",
+      "placeholder": "e.g., International Brands",
+      "default": "Statistic"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statistic"
+    }
+  ]
+}
+{% endschema %}
