@@ -1,0 +1,57 @@
+<div class="bg-black text-white announcement">
+  <div class="container py-2.5 relative">
+    <p class="text-sm text-center">
+      {{ section.settings.announcement_text }}
+      {% if section.settings.announcement_link and section.settings.announcement_link_text %}
+        <a href="{{ section.settings.announcement_link }}" class="underline font-medium inline-block ml-2">
+          {{- section.settings.announcement_link_text -}}
+        </a>
+      {% endif %}
+    </p>
+    {% if section.settings.announcement_dismissible %}
+      <button
+        aria-label="Close"
+        class="absolute top-2 right-3 p-2 cursor-pointer size-6 leading-0 flex justify-center items-center"
+      >
+        ×
+      </button>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Announcement Text",
+      "default": "Free shipping on orders over $50!"
+    },
+    {
+      "type": "text",
+      "id": "announcement_link_text",
+      "label": "Announcement Link Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Announcement Link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_dismissible",
+      "label": "Dismissible Announcement",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement"
+    }
+  ]
+}
+{% endschema %}
