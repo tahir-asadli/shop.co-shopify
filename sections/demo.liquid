@@ -1,0 +1,35 @@
+<div>Demo section</div>
+{% comment %} Display blocks {% endcomment %}
+{% for block in section.blocks %}
+  {% render block.type, block: block %}
+{% endfor %}
+{% render 'heading', text: 'Heading 2', size: 'h2' %}
+{% schema %}
+{
+  "name": "Demo Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "demo_text",
+      "label": "Demo Text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "type": "heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Demo Section Template",
+      "category": "Demo"
+    }
+  ]
+}
+{% endschema %}

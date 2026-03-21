@@ -1,0 +1,20 @@
+{% doc %}
+  Renders a heading block.
+
+  @example
+  {% render 'heading', text: 'Heading 1', size: 'h1' %}
+{% enddoc %}
+
+{% assign block_settings = block.settings %}
+
+{% if block_settings.heading_size != blank %}
+  {% assign size = block_settings.heading_size | default: 'h1' %}
+{% endif %}
+
+{% if block_settings.heading_text != blank %}
+  {% assign text = block_settings.heading_text %}
+{% endif %}
+
+<{{ size }}>
+  {{- text -}}
+</{{ size }}>

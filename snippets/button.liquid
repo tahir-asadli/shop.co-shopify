@@ -1,0 +1,22 @@
+{% assign block_settings = block.settings %}
+{% assign block_settings = block.settings %}
+
+{% if block_settings.button_text != blank %}
+  {% assign text = block_settings.button_text %}
+{% endif %}
+
+{% if block_settings.link != blank %}
+  {% assign link = block_settings.link %}
+{% endif %}
+
+<a
+  {% if link == blank %}
+    role="link"
+    aria-disabled="true"
+  {% else %}
+    href="{{ link }}"
+  {% endif %}
+  class="button"
+>
+  {{- text -}}
+</a>
