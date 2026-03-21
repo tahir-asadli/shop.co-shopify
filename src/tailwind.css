@@ -1,0 +1,256 @@
+@import 'tailwindcss';
+@import './fonts/satoshi.css';
+@source "../templates/**/*.liquid";
+@source "../sections/**/*.liquid";
+@source "../snippets/**/*.liquid";
+@source "../layout/**/*.liquid";
+@source "../config/*.json";
+@custom-variant hover (&:hover);
+
+@theme {
+  --font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-anton: 'Anton', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+  --text-4xl: 40px;
+  --text-5xl: 48px;
+  --text-6xl: 64px;
+}
+
+@layer base {
+  :root {
+    font-size: var(--text-base);
+    color: var(--color-text);
+  }
+  * {
+    @apply box-border;
+  }
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-text);
+  }
+
+  html.mobile-menu-open,
+  html.mobile-menu-open body {
+    @apply overflow-hidden h-full;
+  }
+
+  h1,
+  .h1 {
+    font-family: var(--font-anton);
+    font-size: var(--text-4xl);
+    line-height: 1.1;
+    @variant lg {
+      font-size: var(--text-5xl);
+    }
+    @variant xl {
+      font-size: var(--text-6xl);
+    }
+  }
+  h2,
+  .h2 {
+    font-size: var(--text-3xl);
+    @variant lg {
+      font-size: var(--text-5xl);
+    }
+  }
+  h3,
+  .h3 {
+    font-size: var(--text-4xl);
+  }
+  h4,
+  .h4 {
+    font-size: var(--text-3xl);
+  }
+  h5,
+  .h5 {
+    font-size: var(--text-2xl);
+  }
+  h6,
+  .h6 {
+    font-size: var(--text-xl);
+  }
+}
+
+@layer components {
+  .button {
+    @apply inline-flex items-center justify-center px-8 py-3 bg-black text-white text-lg rounded-full font-semibold transition-opacity hover:opacity-90 cursor-pointer;
+  }
+  .text-input {
+    @apply bg-gray-100 rounded-full px-4 py-2 h-12 w-full;
+  }
+
+  /* Radio Color input */
+  .radio input {
+    @apply sr-only;
+  }
+  .radio label {
+    @apply inline-flex justify-center items-center size-9.25 rounded-full cursor-pointer;
+  }
+  .radio label svg {
+    @apply size-4 text-white opacity-0 transition-opacity;
+  }
+  .radio input:checked + label svg {
+    @apply opacity-100;
+  }
+
+  /* Radio Size input */
+  .radio-size input {
+    @apply sr-only;
+  }
+  .radio-size label {
+    @apply inline-flex justify-center items-center rounded-full cursor-pointer py-3 px-6 bg-gray-100 text-black/60 transition;
+  }
+  .radio-size input:checked + label {
+    @apply bg-black text-white;
+  }
+
+  /* Quantity-component */
+  .quantity-component {
+    @apply inline-flex items-center rounded-full overflow-hidden h-13 bg-gray-100;
+  }
+  .quantity-component button {
+    @apply px-4 py-1 bg-gray-100 text-black cursor-pointer transition-opacity hover:opacity-90 text-3xl;
+  }
+  .quantity-component input {
+    @apply w-16 text-center border-none focus:ring-0 font-medium outline-0;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .quantity-component.small {
+    @apply h-11;
+  }
+  .quantity-component.small button {
+    @apply px-3 text-2xl;
+  }
+
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #f0f0f0;
+    outline: none;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+  }
+
+  /* Mouse-over effects */
+  .slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: black;
+    cursor: pointer;
+    border-radius: 20px;
+    border: none;
+  }
+
+  .slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: black;
+    cursor: pointer;
+    border-radius: 20px;
+    border: none;
+  }
+  .slider + div {
+    &:before {
+      content: '$';
+      /* @apply absolute top-1/2 left-0 -translate-y-1/2 w-full h-6 bg-transparent; */
+    }
+  }
+}
+@layer utilities {
+  .container {
+    @apply transition-all;
+    /* Apply default horizontal margin for centering */
+    margin-inline: auto;
+    /* Apply default horizontal padding */
+    padding-inline: 1rem;
+
+    /* Customize max-width at specific breakpoints using @variant */
+    @variant sm {
+      max-width: 540px;
+    }
+    @variant md {
+      max-width: 720px;
+    }
+    @variant lg {
+      max-width: 960px;
+    }
+    @variant xl {
+      max-width: 1140px;
+    }
+    @variant 2xl {
+      max-width: 1240px;
+    }
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Header */
+  .header-content-visible {
+    @apply block opacity-100 top-20;
+  }
+
+  /* Search component */
+  .search-component.search-active button.clear {
+    @apply flex;
+  }
+
+  /* Reviews slider */
+  .splide.reviews .panel {
+    @apply absolute top-0 w-full h-full hidden bg-white;
+    /*  backdrop-blur-sm blur-[3px] */
+    @variant sm {
+    }
+    @variant md {
+    }
+    @variant lg {
+      @apply block;
+      max-width: calc((105% - 960px) / 2);
+    }
+    @variant xl {
+      @apply block;
+      max-width: calc((105% - 1140px) / 2);
+    }
+    @variant 2xl {
+      @apply block;
+      max-width: calc((105% - 1240px) / 2);
+    }
+  }
+  .splide.reviews .left-panel {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    @apply left-0;
+  }
+  .splide.reviews .right-panel {
+    @apply right-0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+  }
+
+  .splide.reviews .splide__arrows {
+    @apply absolute -top-10 right-10 flex gap-2;
+  }
+  .splide.reviews .splide__arrows button {
+    @apply static! bg-transparent! opacity-100!;
+  }
+}
