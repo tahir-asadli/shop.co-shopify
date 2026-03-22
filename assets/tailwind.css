@@ -297,6 +297,9 @@
   .justify-center {
     justify-content: center;
   }
+  .gap-1 {
+    gap: calc(var(--spacing) * 1);
+  }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
   }
@@ -313,6 +316,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .rounded {
+    border-radius: 0.25rem;
   }
   .border {
     border-style: var(--tw-border-style);
@@ -460,6 +466,36 @@
     @media (width >= 80rem) {
       font-size: var(--text-4xl);
       line-height: var(--tw-leading, var(--text-4xl--line-height));
+    }
+  }
+  .\[\&_svg\]\:h-auto {
+    & svg {
+      height: auto;
+    }
+  }
+  .\[\&_svg\]\:w-6 {
+    & svg {
+      width: calc(var(--spacing) * 6);
+    }
+  }
+  .\[\&_svg\]\:w-10 {
+    & svg {
+      width: calc(var(--spacing) * 10);
+    }
+  }
+  .\[\&_svg\]\:w-12 {
+    & svg {
+      width: calc(var(--spacing) * 12);
+    }
+  }
+  .\[\&_svg\]\:w-13 {
+    & svg {
+      width: calc(var(--spacing) * 13);
+    }
+  }
+  .\[\&_svg\]\:w-auto {
+    & svg {
+      width: auto;
     }
   }
 }

@@ -2,24 +2,6 @@
   <div class="container flex gap-10">
     {% content_for 'blocks' %}
   </div>
-  <div class="container flex gap-4">
-    <div class="footer__links">
-      {% for link in section.settings.menu.links %}
-        {{ link.title | link_to: link.url }}
-      {% endfor %}
-    </div>
-    <div class="logo">
-      {{ shop.name | link_to: routes.root_url }}
-      footer:{{ settings.logo }}
-    </div>
-    <div class="footer__payment">
-      {% if section.settings.show_payment_icons %}
-        {% for type in shop.enabled_payment_types %}
-          {{ type | payment_type_svg_tag }}
-        {% endfor %}
-      {% endif %}
-    </div>
-  </div>
 </footer>
 
 {% schema %}
