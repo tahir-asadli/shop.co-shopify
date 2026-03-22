@@ -7,6 +7,7 @@
 
 <div
   class="text {{ block.settings.text_style }}"
+  style="color: {{ block.settings.color }}"
   style="--text-align: {{ block.settings.alignment }}"
   {{ block.shopify_attributes }}
 >
@@ -52,6 +53,12 @@
       "id": "alignment",
       "label": "t:labels.alignment",
       "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color",
+      "default": "#616262"
     }
   ],
   "presets": [{ "name": "t:general.text" }]
