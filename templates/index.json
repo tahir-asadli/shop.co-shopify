@@ -27,7 +27,8 @@
           "settings": {
             "text": "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.",
             "text_style": "text--normal",
-            "alignment": "left"
+            "alignment": "left",
+            "color": "#797979"
           },
           "blocks": {}
         },
@@ -39,25 +40,60 @@
             "link": "shopify://collections/all"
           },
           "blocks": {}
+        },
+        "statistics_fVdccm": {
+          "type": "statistics",
+          "name": "Statistics",
+          "settings": {},
+          "blocks": {
+            "statistic_MEPYmG": {
+              "type": "statistic",
+              "name": "Statistic",
+              "settings": {
+                "statistic_number": "200+",
+                "statistic_label": "International Brands"
+              },
+              "blocks": {}
+            },
+            "statistic_BkJQUw": {
+              "type": "statistic",
+              "name": "Statistic",
+              "settings": {
+                "statistic_number": "2,000+",
+                "statistic_label": "High-Quality Products"
+              },
+              "blocks": {}
+            },
+            "statistic_pJ6wWz": {
+              "type": "statistic",
+              "name": "Statistic",
+              "settings": {
+                "statistic_number": "30,000+",
+                "statistic_label": "Happy Customers"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "statistic_MEPYmG",
+            "statistic_BkJQUw",
+            "statistic_pJ6wWz"
+          ]
         }
       },
       "block_order": [
         "heading_FUMbEB",
         "text_EhFib9",
-        "button_PWVgxY"
+        "button_PWVgxY",
+        "statistics_fVdccm"
       ],
       "name": "Hero",
       "settings": {
         "hero_image": "shopify://shop_images/hero.png"
       }
-    },
-    "main": {
-      "type": "hello-world",
-      "settings": {}
     }
   },
   "order": [
-    "hero_fgdeqD",
-    "main"
+    "hero_fgdeqD"
   ]
 }
