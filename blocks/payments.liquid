@@ -1,0 +1,25 @@
+<div class="flex gap-1">
+  {% if section.settings.show_payment_icons %}
+    {% for type in shop.enabled_payment_types %}
+      <span class="rounded inline-block [&_svg]:w-12 [&_svg]:h-auto">{{ type | payment_type_svg_tag }}</span>
+    {% endfor %}
+  {% endif %}
+</div>
+{% schema %}
+{
+  "name": "Payments",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Payments"
+    }
+  ]
+}
+{% endschema %}
