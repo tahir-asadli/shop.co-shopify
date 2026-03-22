@@ -2,7 +2,6 @@ class Announcement extends HTMLElement {
   constructor() {
     super();
     this.querySelector('button').addEventListener('click', this.onCloseButtonClick.bind(this));
-    this.bindEvents();
   }
 
   onCloseButtonClick(event) {

@@ -1,0 +1,56 @@
+<!-- Hero -->
+<section class="bg-gray-100">
+  <div class="container grid md:grid-cols-2 gap4 md:gap-10">
+    <div class="flex flex-col gap-2 md:gap-6 justify-center order-1 md:order-0">
+      <div class="flex flex-col gap-3 py-4 pb-10 md:pb-6 md:py-6">
+        {% content_for 'blocks' %}
+        <div class="flex gap-4 mt-7">
+          <div class="border-r border-gray-300 pr-4">
+            <h5 class="text-xl lg:text-3xl xl:text-4xl font-bold">200+</h5>
+            <p class="text-black/60">International Brands</p>
+          </div>
+          <div class="border-r border-gray-300 pr-4">
+            <h5 class="text-xl lg:text-3xl xl:text-4xl font-bold">2,000+</h5>
+            <p class="text-black/60">High-Quality Products</p>
+          </div>
+          <div>
+            <h5 class="text-xl lg:text-3xl xl:text-4xl font-bold">30,000+</h5>
+            <p class="text-black/60">Happy Customers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="py-4 md:py-0">
+      <img
+        src="{{ section.settings.hero_image | image_url: width: 620, height: 620 }}"
+        alt="Hero Image"
+        width="{{ section.settings.hero_image }}"
+        height="{{ section.settings.hero_image }}"
+        class="w-full h-auto object-cover"
+      >
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}
