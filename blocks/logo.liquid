@@ -15,19 +15,16 @@
   ]
 }
 {% endschema %}
-{{
-  block.settings.logo
-  | image_url: width: 324
-  | image_tag: class: 'gift-card__image gift-card__image-border', alt: logo_alt
-}}
+
 {% if block.settings.logo != blank %}
   <div class="logo">
-    {% comment %} {{ block.settings.logo | image_tag: alt: shop.name }} {% endcomment %}
+    {%- assign logo_alt = block.settings.logo.alt | default: shop.name | escape -%}
+    {{ block.settings.logo | image_url: width: 160 | image_tag: alt: logo_alt | link_to: routes.root_url }}
   </div>
-{% elsif settings.logo != blank %}
+{% elsif shop.brand.logo != blank %}
+  {%- assign logo_alt = shop.brand.logo.alt | default: shop.name | escape -%}
   <div class="logo">
-    {{ shop.name | link_to: routes.root_url }}
-    logo:{{ settings.logo }}
+    {{ shop.brand.logo | image_url: width: 160 | image_tag: alt: logo_alt | link_to: routes.root_url }}
   </div>
 {% else %}
   <div class="logo">

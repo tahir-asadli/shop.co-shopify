@@ -21,11 +21,11 @@
             "heading": "Column 1"
           },
           "blocks": {
-            "copyright_k6mDaC": {
-              "type": "copyright",
-              "name": "Copyright",
+            "logo_tN6yVK": {
+              "type": "logo",
+              "name": "Logo",
               "settings": {
-                "text": "&copy; date Shop.Co. All rights reserved."
+                "logo": "shopify://shop_images/logo.png"
               },
               "blocks": {}
             },
@@ -37,11 +37,20 @@
                 "heading_size": "h1"
               },
               "blocks": {}
+            },
+            "copyright_k6mDaC": {
+              "type": "copyright",
+              "name": "Copyright",
+              "settings": {
+                "text": "© date Shop.Co. All rights reserved."
+              },
+              "blocks": {}
             }
           },
           "block_order": [
-            "copyright_k6mDaC",
-            "heading_Ld8kfq"
+            "logo_tN6yVK",
+            "heading_Ld8kfq",
+            "copyright_k6mDaC"
           ]
         },
         "column_zNaja4": {
