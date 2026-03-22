@@ -9,12 +9,55 @@
  */
 {
   "sections": {
+    "hero_fgdeqD": {
+      "type": "hero",
+      "blocks": {
+        "heading_FUMbEB": {
+          "type": "heading",
+          "name": "Heading",
+          "settings": {
+            "heading_text": "FIND CLOTHES THAT MATCHES YOUR STYLE",
+            "heading_size": "h1"
+          },
+          "blocks": {}
+        },
+        "text_EhFib9": {
+          "type": "text",
+          "name": "t:general.text",
+          "settings": {
+            "text": "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style.",
+            "text_style": "text--normal",
+            "alignment": "left"
+          },
+          "blocks": {}
+        },
+        "button_PWVgxY": {
+          "type": "button",
+          "name": "Button",
+          "settings": {
+            "button_text": "Shop Now",
+            "link": "shopify://collections/all"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading_FUMbEB",
+        "text_EhFib9",
+        "button_PWVgxY"
+      ],
+      "name": "Hero",
+      "settings": {
+        "hero_image": "shopify://shop_images/hero.png"
+      }
+    },
     "main": {
       "type": "hello-world",
       "settings": {}
     }
   },
   "order": [
+    "hero_fgdeqD",
     "main"
   ]
 }

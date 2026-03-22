@@ -1,0 +1,29 @@
+<div class="border-r border-gray-300 pr-4">
+  <h5 class="text-xl lg:text-3xl xl:text-4xl font-bold">{{ block.settings.statistic_number }}</h5>
+  <p class="text-black/60">{{ block.settings.statistic_label }}</p>
+</div>
+
+{% schema %}
+{
+  "name": "Statistic",
+  "settings": [
+    {
+      "type": "text",
+      "id": "statistic_number",
+      "label": "Statistic Number",
+      "default": "200+"
+    },
+    {
+      "type": "text",
+      "id": "statistic_label",
+      "label": "Statistic Label",
+      "default": "International Brands"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statistic"
+    }
+  ]
+}
+{% endschema %}
