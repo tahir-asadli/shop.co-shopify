@@ -21,6 +21,14 @@
             "heading": "Column 1"
           },
           "blocks": {
+            "copyright_k6mDaC": {
+              "type": "copyright",
+              "name": "Copyright",
+              "settings": {
+                "text": "&copy; date Shop.Co. All rights reserved."
+              },
+              "blocks": {}
+            },
             "heading_Ld8kfq": {
               "type": "heading",
               "name": "Heading",
@@ -32,6 +40,7 @@
             }
           },
           "block_order": [
+            "copyright_k6mDaC",
             "heading_Ld8kfq"
           ]
         },

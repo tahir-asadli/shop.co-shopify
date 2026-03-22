@@ -1,0 +1,36 @@
+{% schema %}
+{
+  "name": "Logo",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo"
+    }
+  ]
+}
+{% endschema %}
+{{
+  block.settings.logo
+  | image_url: width: 324
+  | image_tag: class: 'gift-card__image gift-card__image-border', alt: logo_alt
+}}
+{% if block.settings.logo != blank %}
+  <div class="logo">
+    {% comment %} {{ block.settings.logo | image_tag: alt: shop.name }} {% endcomment %}
+  </div>
+{% elsif settings.logo != blank %}
+  <div class="logo">
+    {{ shop.name | link_to: routes.root_url }}
+    logo:{{ settings.logo }}
+  </div>
+{% else %}
+  <div class="logo">
+    {{ shop.name | link_to: routes.root_url }}
+  </div>
+{% endif %}

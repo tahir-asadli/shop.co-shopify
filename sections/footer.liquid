@@ -8,7 +8,10 @@
         {{ link.title | link_to: link.url }}
       {% endfor %}
     </div>
-
+    <div class="logo">
+      {{ shop.name | link_to: routes.root_url }}
+      footer:{{ settings.logo }}
+    </div>
     <div class="footer__payment">
       {% if section.settings.show_payment_icons %}
         {% for type in shop.enabled_payment_types %}
