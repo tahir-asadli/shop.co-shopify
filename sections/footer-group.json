@@ -24,9 +24,7 @@
             "logo_tN6yVK": {
               "type": "logo",
               "name": "Logo",
-              "settings": {
-                "logo": "shopify://shop_images/logo.png"
-              },
+              "settings": {},
               "blocks": {}
             },
             "heading_Ld8kfq": {
@@ -60,6 +58,14 @@
             "heading": "Column 2"
           },
           "blocks": {
+            "payments_rBVBFp": {
+              "type": "payments",
+              "name": "Payments",
+              "settings": {
+                "show_payment_icons": true
+              },
+              "blocks": {}
+            },
             "heading_8wLhhX": {
               "type": "heading",
               "name": "Heading",
@@ -71,6 +77,7 @@
             }
           },
           "block_order": [
+            "payments_rBVBFp",
             "heading_8wLhhX"
           ]
         }
