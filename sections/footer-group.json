@@ -13,6 +13,54 @@
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "column_wgwVdf": {
+          "type": "column",
+          "name": "Column",
+          "settings": {
+            "heading": "Column 1"
+          },
+          "blocks": {
+            "heading_Ld8kfq": {
+              "type": "heading",
+              "name": "Heading",
+              "settings": {
+                "heading_text": "Heading Text",
+                "heading_size": "h1"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "heading_Ld8kfq"
+          ]
+        },
+        "column_zNaja4": {
+          "type": "column",
+          "name": "Column",
+          "settings": {
+            "heading": "Column 2"
+          },
+          "blocks": {
+            "heading_8wLhhX": {
+              "type": "heading",
+              "name": "Heading",
+              "settings": {
+                "heading_text": "Heading Text",
+                "heading_size": "h4"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "heading_8wLhhX"
+          ]
+        }
+      },
+      "block_order": [
+        "column_wgwVdf",
+        "column_zNaja4"
+      ],
       "settings": {
         "menu": "",
         "show_payment_icons": true

@@ -1,0 +1,24 @@
+{% assign copy_date = 'now' | date: '%Y' %}
+<div>
+  {{ block.settings.text | replace: 'date', copy_date }}
+</div>
+{% schema %}
+{
+  "name": "Copyright",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Copyright",
+      "settings": {
+        "text": "&copy; date Shop.Co. All rights reserved."
+      }
+    }
+  ]
+}
+{% endschema %}
