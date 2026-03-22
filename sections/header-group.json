@@ -11,12 +11,26 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
+    "announcement_3MLJHN": {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": {
+        "announcement_text": "Free shipping on orders over $50!",
+        "announcement_link_text": "Shop Now",
+        "announcement_link": "shopify://collections/all",
+        "announcement_dismissible": true
+      }
+    },
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "menu": "",
+        "customer_account_menu": "customer-account-main-menu"
+      }
     }
   },
   "order": [
+    "announcement_3MLJHN",
     "header"
-  ],
+  ]
 }
