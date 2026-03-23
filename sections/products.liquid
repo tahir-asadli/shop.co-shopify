@@ -1,0 +1,32 @@
+<!-- Products -->
+<section class="bg-white">
+  <div class="container pt-18 pb-16 border-b border-black/10">
+    <h2 class="text-4xl md:text-5xl lg:text-6xl text-center font-anton mb-14">
+      {{ section.settings.collection.title }}
+    </h2>
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
+      {% for product in section.settings.collection.products %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Products",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Products"
+    }
+  ]
+}
+{% endschema %}

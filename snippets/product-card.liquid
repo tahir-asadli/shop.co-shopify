@@ -1,0 +1,41 @@
+{% liquid
+  assign featured_image = product.selected_or_first_available_variant.featured_image
+  if featured_image == blank
+    assign featured_image = product.featured_media.preview_image
+  endif
+%}
+<article class="rounded-2xl group">
+  {% comment %} p-10  {% endcomment %}
+  <div class="bg-gray-100 rounded-2xl mb-2 relative">
+    {% if featured_image != blank %}
+      <a href="{{ product.selected_or_first_available_variant.url }}">
+        {% render 'image',
+          image: featured_image,
+          width: 270,
+          height: 300,
+          crop: 'center',
+          class: 'w-full h-72 object-cover mb-4 rounded-2xl'
+        %}
+      </a>
+    {% endif %}
+    <div class="absolute inset-0 bg-black/10 flex items-center justify-center gap-4 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
+      <a class="button px-5 py-2 text-sm" href="/product">Add to Cart</a>
+      <a
+        class="button px-5 py-2 text-sm bg-white text-black border border-black/10"
+        href="{{ product.selected_or_first_available_variant.url }}"
+        >View Details</a
+      >
+    </div>
+  </div>
+
+  <a href="{{ product.selected_or_first_available_variant.url }}">
+    <h3 class="text-xl font-bold mb-1">{{ product.title }}</h3>
+  </a>
+  <div class="flex items-center gap-2 mb-1">
+    <span class="text-yellow-500 text-2xl">★★★★☆</span>
+    <span>4.5/<span class="text-gray-600">5</span></span>
+  </div>
+  <div class="flex items-center gap-4">
+    <span class="text-2xl font-bold">{{ product.price | money }}</span>
+  </div>
+</article>
