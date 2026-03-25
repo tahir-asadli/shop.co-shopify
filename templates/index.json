@@ -91,9 +91,17 @@
       "settings": {
         "hero_image": "shopify://shop_images/hero.png"
       }
+    },
+    "products_b3gb4U": {
+      "type": "products",
+      "name": "Products",
+      "settings": {
+        "collection": "frontpage"
+      }
     }
   },
   "order": [
-    "hero_fgdeqD"
+    "hero_fgdeqD",
+    "products_b3gb4U"
   ]
 }

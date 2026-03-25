@@ -75,6 +75,14 @@
   .h6 {
     font-size: var(--text-xl);
   }
+
+  dialog {
+    @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-50;
+  }
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px); /* Applies a blur effect to the background */
+  }
 }
 
 @layer components {

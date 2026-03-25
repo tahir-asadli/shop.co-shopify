@@ -19,7 +19,21 @@
       </a>
     {% endif %}
     <div class="absolute inset-0 bg-black/10 flex items-center justify-center gap-4 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
-      <a class="button px-5 py-2 text-sm" href="/product">Add to Cart</a>
+      {% if product.variants.size > 1 %}
+        <button
+          class="button px-5 py-2 text-sm choose-options"
+          data-product-handle="{{ product.handle }}"
+        >
+          Choose Options
+        </button>
+      {% else %}
+        <button
+          class="button px-5 py-2 text-sm add-to-cart"
+          data-product-id="{{ product.selected_or_first_available_variant.id }}"
+        >
+          Add to Cart
+        </button>
+      {% endif %}
       <a
         class="button px-5 py-2 text-sm bg-white text-black border border-black/10"
         href="{{ product.selected_or_first_available_variant.url }}"
