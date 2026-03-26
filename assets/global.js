@@ -23,8 +23,7 @@ class VariantPicker extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log('connected', this.sectionId);
-
+    console.log('connected variant-picker', this.sectionId);
     this.variantSelectors = this.querySelectorAll('input[type="radio"]');
     this.variantSelectors.forEach(selector => {
       selector.addEventListener('change', this.handleChange.bind(this));
@@ -32,7 +31,7 @@ class VariantPicker extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.log('disconnected', this.sectionId);
+    console.log('disconnected variant-picker', this.sectionId);
     this.variantSelectors.forEach(selector => {
       selector.removeEventListener('change', this.handleChange.bind(this));
     });
@@ -49,38 +48,12 @@ class VariantPicker extends HTMLElement {
 
         const newSection = tempDiv.querySelector(`[section-id="${this.sectionId}"]`);
         const currentSection = document.querySelector(`[section-id="${this.sectionId}"]`);
-        console.log(newSection, currentSection);
-
         if (newSection && currentSection) {
-          console.log('replaced');
-
           currentSection.replaceWith(newSection);
         }
-
         const newURL = new URL(url, window.location.origin);
         newURL.searchParams.delete('section_id');
         window.history.replaceState({}, '', newURL);
-        // const variant = data.variant;
-        // const section = data.section;
-
-        // // Update the hidden input with the new variant ID
-        // const hiddenInput = document.querySelector(`#variant-id`);
-        // hiddenInput.value = variant.id;
-
-        // // Update the price and availability
-        // const priceElement = document.querySelector('#product-price');
-        // priceElement.textContent = `$${(variant.price / 100).toFixed(2)}`;
-
-        // const addToCartButton = document.querySelector('.add-to-cart');
-        // if (variant.available) {
-        //   addToCartButton.disabled = false;
-        //   addToCartButton.textContent = 'Add to Cart';
-        //   addToCartButton.setAttribute('data-product-id', variant.id);
-        // } else {
-        //   addToCartButton.disabled = true;
-        //   addToCartButton.textContent = 'Sold Out';
-        //   addToCartButton.removeAttribute('data-product-id');
-        // }
       })
       .catch(err => console.error('Error fetching variant data:', err));
     console.log('change', event.currentTarget, event.target.value, url);
@@ -89,6 +62,88 @@ class VariantPicker extends HTMLElement {
 }
 
 customElements.define('variant-picker', VariantPicker);
+
+class ProductForm extends HTMLElement {
+  constructor() {
+    super();
+    console.log('product form');
+  }
+
+  connectedCallback() {
+    console.log('connected product-form');
+    this.form = this.querySelector('form');
+
+    this.quantityInput = this.form.querySelector(
+      "input[name='quantity']"
+    );
+    console.log('this.form', this.form);
+    console.log('this.quantityInput', this.quantityInput);
+    this.form.addEventListener('submit', this.handleSubmit.bind(this));
+    this.minusButton = this.querySelector("[data-quantity-minus]");
+    this.plusButton = this.querySelector("[data-quantity-plus]");
+    console.log('this.plusButton', this.plusButton);
+    console.log('this.minusButton', this.minusButton);
+
+    this.handleMinusClick = this.handleMinusClick.bind(this);
+    this.handlePlusClick = this.handlePlusClick.bind(this);
+
+    this.minusButton.addEventListener("click", this.handleMinusClick);
+    this.plusButton.addEventListener("click", this.handlePlusClick);
+
+  }
+
+  disconnectedCallback() {
+    console.log('disconnected product-form');
+    this.form.removeEventListener('submit', this.handleSubmit.bind(this));
+    this.minusButton.removeEventListener("click", this.handleMinusClick);
+    this.plusButton.removeEventListener("click", this.handlePlusClick);
+  }
+
+  handleMinusClick() {
+    if (parseInt(this.quantityInput.value) === 1) {
+      return;
+    }
+    this.quantityInput.value = parseInt(this.quantityInput.value) - 1;
+    console.log('this.quantityInput', this.quantityInput.value);
+  }
+
+  handlePlusClick() {
+    const maxQuantity = parseInt(this.quantityInput.getAttribute('max'));
+    if (parseInt(this.quantityInput.value) === maxQuantity) {
+      return;
+    }
+    this.quantityInput.value = parseInt(this.quantityInput.value) + 1;
+    console.log('this.quantityInput', this.quantityInput.value);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    const url = this.form.action;
+    const formData = new FormData(this.form);
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Added to cart!', data);
+        // Optionally, you can update the cart UI here or show a success message.
+      })
+      .catch(err => console.error('Error adding to cart:', err));
+
+
+    // const formData = new FormData(this.form);
+    // const variantId = formData.get('id');
+    // const quantity = formData.get('quantity') || 1;
+    // addToCart(variantId, quantity)
+    //   .then(cart => console.log('Added to cart!', cart))
+    //   .catch(err => console.error('Error adding to cart:', err));
+  }
+}
+
+customElements.define('product-form', ProductForm);
+
 
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {

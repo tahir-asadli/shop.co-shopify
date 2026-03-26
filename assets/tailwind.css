@@ -909,6 +909,11 @@
       opacity: 90%;
     }
   }
+  .button:disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 30%;
+  }
   .text-input {
     height: calc(var(--spacing) * 12);
     width: 100%;
@@ -972,6 +977,11 @@
   .radio-button input:checked + label {
     background-color: var(--color-black);
     color: var(--color-white);
+  }
+  .radio-button input:disabled + label {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 30%;
   }
   .variants-color .radio-button input + label {
     position: relative;

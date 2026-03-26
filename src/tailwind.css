@@ -89,6 +89,9 @@
   .button {
     @apply inline-flex items-center justify-center px-8 py-3 bg-black text-white text-lg rounded-full font-semibold transition-opacity hover:opacity-90 cursor-pointer;
   }
+  .button:disabled {
+    @apply opacity-30 cursor-not-allowed pointer-events-none;
+  }
   .text-input {
     @apply bg-gray-100 rounded-full px-4 py-2 h-12 w-full;
   }
@@ -110,6 +113,9 @@
   }
   .radio-button input:checked + label {
     @apply bg-black text-white;
+  }
+  .radio-button input:disabled + label {
+    @apply opacity-30 cursor-not-allowed pointer-events-none;
   }
 
   .variants-color .radio-button input + label {
