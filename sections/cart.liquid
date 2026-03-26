@@ -11,8 +11,10 @@
   <table>
     {% for item in cart.items %}
       <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
+        <td style="width: 150px; height: 150px;">
+          {% if item.image %}
+            {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
+          {% endif %}
         </td>
         <td>
           <p>{{ item.product.title }}</p>
