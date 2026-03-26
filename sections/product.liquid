@@ -4,8 +4,14 @@
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
-
-<section>
+<script>
+  var variantData = {{ product.variants | json }};
+</script>
+<script type="application/json" data-selected-variant>
+  {{ product.selected_or_first_available_variant | json }}
+</script>
+{{ product.options_with_values | json }}
+<section section-id="{{ section.id }}" class="product-section py-10">
   <div class="container">
     <div class="grid lg:grid-cols-2 gap-10">
       <div>
@@ -35,8 +41,10 @@
           <span>3.5/<span class="text-gray-600">5</span></span>
         </div>
         <div class="flex items-center gap-4 mb-5">
-          <span class="text-3xl font-bold">$130</span>
-          <span class="text-3xl font-bold text-black/40 line-through">$160</span>
+          <span class="text-3xl font-bold">{{ product.selected_or_first_available_variant.price | money }}</span>
+          <span class="text-3xl font-bold text-black/40 line-through">
+            {{- product.selected_or_first_available_variant.compare_at_price | money -}}
+          </span>
           <span class="bg-rose-200 text-rose-700 rounded-full text-12 py-1.5 px-3 leading-none">-30%</span>
         </div>
         <div class="border-b border-b-black/10 pb-5 mb-5">
@@ -45,56 +53,49 @@
             superior comfort and style.
           </p>
         </div>
-        <div class="border-b border-b-black/10 pb-5 mb-5">
-          <h6 class="text-base text-black/60 mb-4">Select Colors</h6>
-          <div class="flex items-center gap-4 flex-wrap">
-            <div class="radio">
-              <input type="radio" name="color" id="brown" class="">
-              <label for="brown" class="bg-amber-900" aria-label="Brown">
-                <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor"></path>
-                </svg>
-              </label>
+        <input type="text" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+        {%- unless product.has_only_default_variant -%}
+          <variant-picker data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
+            <div>
+              {% for option in product.options_with_values %}
+                <div class="border-b border-b-black/10 pb-5 mb-5">
+                  <h6 class="text-base text-black/60 mb-4">Choose {{ option.name }}</h6>
+                  <div class="flex items-center gap-4 flex-wrap variants-{{ option.name | handleize }}">
+                    {% for value in option.values %}
+                      <div class="radio-button">
+                        <input
+                          type="radio"
+                          value="{{ value.variant.id }}"
+                          {% if option.selected_value == value %}
+                            checked
+                          {% endif %}
+                          name="{{ option.name | handleize }}"
+                          id="{{ value | handleize }}"
+                        >
+                        {% if option.name == 'Color' %}
+                          <label
+                            for="{{ value | handleize }}"
+                            style="background-color: {{ value.swatch.color }}"
+                            title="{{ value }}"
+                          >
+                            {{- value -}}
+                          </label>
+                        {% else %}
+                          <label
+                            for="{{ value | handleize }}"
+                            title="{{ value }}"
+                          >
+                            {{- value -}}
+                          </label>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
             </div>
-            <div class="radio">
-              <input type="radio" name="color" id="green" class="">
-              <label for="green" class="bg-green-900" aria-label="Green">
-                <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor"></path>
-                </svg>
-              </label>
-            </div>
-            <div class="radio">
-              <input type="radio" name="color" id="blue" class="">
-              <label for="blue" class="bg-blue-900" aria-label="Blue">
-                <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor"></path>
-                </svg>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="border-b border-b-black/10 pb-5 mb-5">
-          <h6 class="text-base text-black/60 mb-4">Choose Size</h6>
-          <div class="flex items-center gap-4 flex-wrap">
-            <div class="radio-size">
-              <input type="radio" name="size" id="small">
-              <label for="small">Small</label>
-            </div>
-            <div class="radio-size">
-              <input type="radio" name="size" id="medium">
-              <label for="medium">Medium</label>
-            </div>
-            <div class="radio-size">
-              <input type="radio" name="size" id="large">
-              <label for="large">Large</label>
-            </div>
-            <div class="radio-size">
-              <input type="radio" name="size" id="x-large">
-              <label for="x-large">X-Large</label>
-            </div>
-          </div>
-        </div>
+          </variant-picker>
+        {%- endunless -%}
         <div class="flex gap-5">
           <div class="quantity-component">
             <button>−</button>
