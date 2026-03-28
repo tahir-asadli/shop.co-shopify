@@ -72,6 +72,7 @@ class ProductForm extends HTMLElement {
   connectedCallback() {
     console.log('connected product-form');
     this.form = this.querySelector('form');
+    this.fieldset = this.querySelector('fieldset');
 
     this.quantityInput = this.form.querySelector(
       "input[name='quantity']"
@@ -100,6 +101,8 @@ class ProductForm extends HTMLElement {
   }
 
   handleMinusClick() {
+    console.log('this.quantityInput.value', this.quantityInput.value);
+
     if (parseInt(this.quantityInput.value) === 1) {
       return;
     }
@@ -118,7 +121,7 @@ class ProductForm extends HTMLElement {
 
   handleSubmit(event) {
     event.preventDefault();
-
+    this.fieldset.disabled = true;
     const url = this.form.action;
     const formData = new FormData(this.form);
     fetch(url, {
@@ -130,15 +133,10 @@ class ProductForm extends HTMLElement {
         console.log('Added to cart!', data);
         // Optionally, you can update the cart UI here or show a success message.
       })
-      .catch(err => console.error('Error adding to cart:', err));
-
-
-    // const formData = new FormData(this.form);
-    // const variantId = formData.get('id');
-    // const quantity = formData.get('quantity') || 1;
-    // addToCart(variantId, quantity)
-    //   .then(cart => console.log('Added to cart!', cart))
-    //   .catch(err => console.error('Error adding to cart:', err));
+      .catch(err => console.error('Error adding to cart:', err))
+      .finally(() => {
+        this.fieldset.disabled = false;
+      });
   }
 }
 

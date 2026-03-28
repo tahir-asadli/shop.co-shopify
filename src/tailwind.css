@@ -115,7 +115,7 @@
     @apply bg-black text-white;
   }
   .radio-button input:disabled + label {
-    @apply opacity-30 cursor-not-allowed pointer-events-none;
+    @apply opacity-30 cursor-not-allowed;
   }
 
   .variants-color .radio-button input + label {
@@ -136,20 +136,8 @@
     @apply bottom-0;
   }
 
-  .variants-color .radio-button input + label.radio-label-red {
-    @apply bg-red-500;
-  }
-
-  .variants-color .radio-button input + label.radio-label-green {
-    @apply bg-green-500;
-  }
-
-  .variants-color .radio-button input + label.radio-label-blue {
-    @apply bg-blue-500;
-  }
-
-  .variants-color .radio-button input + label.radio-label-gray {
-    @apply bg-gray-500;
+  .variants-color .radio-button input:disabled + label {
+    @apply cursor-not-allowed;
   }
 
   /* Quantity-component */

@@ -10,160 +10,148 @@
 <script type="application/json" data-selected-variant>
   {{ product.selected_or_first_available_variant | json }}
 </script>
-{{ product.options_with_values | json }}
 <product-form>
   <section section-id="{{ section.id }}" class="product-section py-10">
     {% form 'product', product %}
-      <div class="container">
-        <div class="grid lg:grid-cols-2 gap-10">
-          <div>
-            <div class="product-gallery grid lg:grid-cols-[152px_auto] gap-3.5">
-              <div class="product-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 ">
-                <div class="flex lg:block w-full gap-4.5">
-                  {% for image in product.images %}
-                    <span class="inline-block bg-gray-100 rounded-2xl h-42 relative cursor-pointer shrink-0 grow-0 w-42 lg:w-full [&.active]:border [&.active]:border-black [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-contain">
-                      {{ image | image_url: width: 168, height: 168 | image_tag }}
-                    </span>
-                  {% endfor %}
+      <fieldset>
+        <div class="container">
+          <div class="grid lg:grid-cols-2 gap-10">
+            <div>
+              <div class="product-gallery grid lg:grid-cols-[152px_auto] gap-3.5">
+                <div class="product-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 ">
+                  <div class="flex lg:block w-full gap-4.5">
+                    {% for image in product.images %}
+                      <span class="inline-block bg-gray-100 rounded-2xl h-42 relative cursor-pointer overflow-hidden shrink-0 grow-0 w-42 lg:w-full [&.active]:border [&.active]:border-black [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+                        {{ image | image_url: width: 168, height: 168 | image_tag }}
+                      </span>
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="[&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+                  {{
+                    product.featured_image
+                    | image_url: width: 1024, height: 1024
+                    | image_tag: class: 'product-gallery-main-image'
+                  }}
                 </div>
               </div>
-              <div class="[&_img]:w-full [&_img]:h-full [&_img]:object-contain">
-                {{
-                  product.featured_image
-                  | image_url: width: 1024, height: 1024
-                  | image_tag: class: 'product-gallery-main-image'
-                }}
+            </div>
+            <div>
+              <h1 class="h3 uppercase mb-3">{{ product.title }}</h1>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-yellow-500 text-2xl">★★★★☆</span>
+                <span>3.5/<span class="text-gray-600">5</span></span>
               </div>
-            </div>
-          </div>
-          <div>
-            <h1 class="h3 uppercase mb-3">{{ product.title }}</h1>
-            <div class="flex items-center gap-2 mb-3">
-              <span class="text-yellow-500 text-2xl">★★★★☆</span>
-              <span>3.5/<span class="text-gray-600">5</span></span>
-            </div>
-            <div class="flex items-center gap-4 mb-5">
-              <span class="text-3xl font-bold">{{ product.selected_or_first_available_variant.price | money }}</span>
-              <span class="text-3xl font-bold text-black/40 line-through">
-                {{- product.selected_or_first_available_variant.compare_at_price | money -}}
-              </span>
-              <span class="bg-rose-200 text-rose-700 rounded-full text-12 py-1.5 px-3 leading-none">-30%</span>
-            </div>
-            <div class="border-b border-b-black/10 pb-5 mb-5">
-              <p class="text-black/60">
-                {{ product.description }}
-              </p>
-            </div>
-            <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-            {%- unless product.has_only_default_variant -%}
-              <variant-picker data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
-                <div>
-                  {% for option in product.options_with_values %}
-                    <div class="border-b border-b-black/10 pb-5 mb-5">
-                      <h6 class="text-base text-black/60 mb-4">Choose {{ option.name }}</h6>
-                      <div class="flex items-center gap-4 flex-wrap variants-{{ option.name | handleize }}">
-                        {% for value in option.values %}
-                          <div class="radio-button">
-                            <input
-                              type="radio"
-                              value="{{ value.variant.id }}"
-                              {% if option.selected_value == value %}
-                                checked
-                              {% endif %}
-                              {% unless value.variant.available %}
-                                disabled
-                              {% endunless %}
-                              name="{{ option.name | handleize }}"
-                              id="{{ option.name | handleize }}-{{ value | handleize }}"
-                            >
-                            {% if option.name == 'Color' %}
-                              <label
-                                for="{{ option.name | handleize }}-{{ value | handleize }}"
-                                style="background-color: {{ value.swatch.color }}"
-                                title="{{ value }}"
-                              >
-                                {{- value -}}
-                              </label>
-                            {% else %}
-                              <label
-                                for="{{ option.name | handleize }}-{{ value | handleize }}"
-                                title="{{ value }}"
-                              >
-                                {{- value -}}
-                              </label>
-                            {% endif %}
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </variant-picker>
-            {%- endunless -%}
-            <div class="flex gap-5">
-              <div class="quantity-component">
-                <button data-quantity-minus type="button">−</button>
-                <input
-                  type="number"
-                  name="quantity"
-                  value="1"
-                  min="1"
-                  max="{{ product.selected_or_first_available_variant.inventory_quantity }}"
-                  data-quantity-display
-                >
-                <button data-quantity-plus type="button">+</button>
-              </div>
-              <button
-                class="button grow"
-                {% unless product.selected_or_first_available_variant.available %}
-                  disabled
-                {% endunless %}
-              >
-                {% if product.selected_or_first_available_variant.available %}
-                  Add to cart
-                {% else %}
-                  Sold out
+              <div class="flex items-center gap-4 mb-5">
+                <span class="text-3xl font-bold">{{ product.selected_or_first_available_variant.price | money }}</span>
+                {% if product.selected_or_first_available_variant.compare_at_price
+                    > product.selected_or_first_available_variant.price
+                %}
+                  <span class="text-3xl font-bold text-black/40 line-through">
+                    {{- product.selected_or_first_available_variant.compare_at_price | money -}}
+                  </span>
+                  <span class="bg-rose-200 text-rose-700 rounded-full text-12 py-1.5 px-3 leading-none"
+                    >&dash;
+                    {{-
+                      product.selected_or_first_available_variant.compare_at_price
+                      | minus: product.selected_or_first_available_variant.price
+                      | times: 100.0
+                      | divided_by: product.selected_or_first_available_variant.compare_at_price
+                      | round
+                    -}}
+                    %</span
+                  >
                 {% endif %}
-              </button>
+              </div>
+              <div class="border-b border-b-black/10 pb-5 mb-5">
+                <p class="text-black/60">
+                  {{ product.description }}
+                </p>
+              </div>
+              <input
+                type="hidden"
+                name="id"
+                id="variant-id"
+                value="{{ product.selected_or_first_available_variant.id }}"
+              >
+              {%- unless product.has_only_default_variant -%}
+                <variant-picker data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
+                  <div>
+                    {% for option in product.options_with_values %}
+                      <div class="border-b border-b-black/10 pb-5 mb-5">
+                        <h6 class="text-base text-black/60 mb-4">Choose {{ option.name }}</h6>
+                        <div class="flex items-center gap-4 flex-wrap variants-{{ option.name | handleize }}">
+                          {% for value in option.values %}
+                            <div class="radio-button">
+                              <input
+                                type="radio"
+                                value="{{ value.variant.id }}"
+                                {% if option.selected_value == value %}
+                                  checked
+                                {% endif %}
+                                {% unless value.variant.available %}
+                                  disabled
+                                {% endunless %}
+                                name="{{ option.name | handleize }}"
+                                id="{{ option.name | handleize }}-{{ value | handleize }}"
+                              >
+                              {% if option.name == 'Color' %}
+                                <label
+                                  for="{{ option.name | handleize }}-{{ value | handleize }}"
+                                  style="background-color: {{ value.swatch.color }}"
+                                  title="{{ value }}"
+                                >
+                                  {{- value -}}
+                                </label>
+                              {% else %}
+                                <label
+                                  for="{{ option.name | handleize }}-{{ value | handleize }}"
+                                  title="{{ value }}"
+                                >
+                                  {{- value -}}
+                                </label>
+                              {% endif %}
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </variant-picker>
+              {%- endunless -%}
+              <div class="flex gap-5">
+                <div class="quantity-component">
+                  <button data-quantity-minus type="button">−</button>
+                  <input
+                    type="number"
+                    name="quantity"
+                    value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    max="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+                    data-quantity-display
+                  >
+                  <button data-quantity-plus type="button">+</button>
+                </div>
+                <button
+                  class="button grow"
+                  {% unless product.selected_or_first_available_variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {% if product.selected_or_first_available_variant.available %}
+                    Add to cart
+                  {% else %}
+                    Sold out
+                  {% endif %}
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </fieldset>
     {% endform %}
   </section>
 </product-form>
-
-{% comment %}
-  <div class="product-info">
-    <h1>{{ product.title }}</h1>
-    <p>{{ product.price | money }}</p>
-    <p>{{ product.description }}</p>
-  </div>
-
-  <div class="product-form">
-    {% form 'product', product %}
-      {% assign current_variant = product.selected_or_first_available_variant %}
-
-      <select name="id">
-        {% for variant in product.variants %}
-          <option
-            value="{{ variant.id }}"
-            {% if variant == current_variant %}
-              selected="selected"
-            {% endif %}
-          >
-            {{ variant.title }} - {{ variant.price | money }}
-          </option>
-        {% endfor %}
-      </select>
-
-      <input type="text" name="quantity" min="1" value="1">
-
-      <input type="submit" value="Add to cart">
-      {{ form | payment_button }}
-    {% endform %}
-  </div>
-{% endcomment %}
 
 {% schema %}
 {
