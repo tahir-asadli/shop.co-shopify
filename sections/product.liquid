@@ -17,24 +17,26 @@
         <div class="container">
           <div class="grid lg:grid-cols-2 gap-10">
             <div>
-              <div class="product-gallery grid lg:grid-cols-[152px_auto] gap-3.5">
-                <div class="product-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 ">
-                  <div class="flex lg:block w-full gap-4.5">
-                    {% for image in product.images %}
-                      <span class="inline-block bg-gray-100 rounded-2xl h-42 relative cursor-pointer overflow-hidden shrink-0 grow-0 w-42 lg:w-full [&.active]:border [&.active]:border-black [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
-                        {{ image | image_url: width: 168, height: 168 | image_tag }}
-                      </span>
-                    {% endfor %}
+              <product-gallery>
+                <div class="product-gallery grid lg:grid-cols-[152px_auto] gap-3.5">
+                  <div class="product-gallery-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 ">
+                    <div class="flex lg:block w-full gap-4.5">
+                      {% for image in product.images %}
+                        <span class="inline-block bg-gray-100 rounded-2xl h-42 relative cursor-pointer overflow-hidden shrink-0 grow-0 w-42 lg:w-full [&.active]:border [&.active]:border-black [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+                          {{ image | image_url: width: 168, height: 168 | image_tag }}
+                        </span>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="[&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+                    {{
+                      product.featured_image
+                      | image_url: width: 1024, height: 1024
+                      | image_tag: class: 'product-gallery-main-image'
+                    }}
                   </div>
                 </div>
-                <div class="[&_img]:w-full [&_img]:h-full [&_img]:object-cover">
-                  {{
-                    product.featured_image
-                    | image_url: width: 1024, height: 1024
-                    | image_tag: class: 'product-gallery-main-image'
-                  }}
-                </div>
-              </div>
+              </product-gallery>
             </div>
             <div>
               <h1 class="h3 uppercase mb-3">{{ product.title }}</h1>

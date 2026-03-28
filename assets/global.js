@@ -142,6 +142,62 @@ class ProductForm extends HTMLElement {
 
 customElements.define('product-form', ProductForm);
 
+class ProductGallery extends HTMLElement {
+  constructor() {
+    super();
+    console.log('product gallery');
+  }
+
+  connectedCallback() {
+    console.log('connected product-gallery');
+    this.thumbnails = this.querySelectorAll('.product-gallery-thumbnails span');
+    this.mainImage = this.querySelector('.product-gallery-main-image');
+
+    console.log('this.thumbnails', this.thumbnails);
+    console.log('this.mainImage', this.mainImage);
+    this.updateMainImage = this.updateMainImage.bind(this);
+    if (this.thumbnails.length > 0 && this.mainImage) {
+      console.log('done');
+
+      this.thumbnails.forEach(thumbnail => {
+        console.log('thumbnail.addEventListener');
+
+        thumbnail.addEventListener('click', this.updateMainImage);
+      });
+
+    }
+
+    this.handleMinusClick = this.handleMinusClick.bind(this);
+    // this.minusButton.addEventListener("click", this.handleMinusClick);
+
+  }
+
+  disconnectedCallback() {
+    console.log('disconnected product-gallery');
+    // this.form.removeEventListener('submit', this.handleSubmit.bind(this));
+    // this.minusButton.removeEventListener("click", this.handleMinusClick);
+    // this.plusButton.removeEventListener("click", this.handlePlusClick);
+  }
+
+  updateMainImage(event) {
+    console.log('clikde thumbnail.addEventListener');
+
+    const span = event.currentTarget;
+    const thumbImage = span.querySelector('img');
+    console.log('thumbImage', thumbImage);
+
+
+    const imageSrc = thumbImage.getAttribute('src');
+    const imageSrcSet = thumbImage.getAttribute('srcset');
+    console.log('imageSrc', imageSrc);
+    console.log('imageSrcSet', imageSrcSet);
+    this.mainImage.src = imageSrc;
+    this.mainImage.srcset = imageSrcSet;
+  }
+}
+
+customElements.define('product-gallery', ProductGallery);
+
 
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
