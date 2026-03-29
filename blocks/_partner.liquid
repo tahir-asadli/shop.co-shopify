@@ -1,0 +1,27 @@
+{% if block.settings.partner_logo != blank %}
+  <li class="splide__slide flex justify-center [&_img]:h-8" {{ block.shopify_attributes }}>
+    <span>
+      {{ block.settings.partner_logo | image_url: width: 160 | image_tag }}
+    </span>
+  </li>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Partner",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "partner_logo",
+      "label": "Partner Logo"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partner Logo",
+      "category": "Custom Blocks"
+    }
+  ]
+}
+{% endschema %}

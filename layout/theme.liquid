@@ -23,8 +23,10 @@
 
     {% # Load and preload the critical CSS %}
     {% comment %} {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }} {% endcomment %}
+    {{ 'splide.min.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'tailwind.css' | asset_url | stylesheet_tag: preload: true }}
 
+    <script src="{{ 'splide.min.js' | asset_url }}" defer="defer"></script>
     <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
 
     {% # Social, title, etc. %}

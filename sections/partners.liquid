@@ -1,0 +1,31 @@
+{% comment %} Partners Section {% endcomment %}
+<splide-carousel>
+  <section class="bg-black py-10">
+    <div class="container">
+      <div class="splide splide-carousel">
+        <div class="splide__track">
+          <ul class="splide__list">
+            {% content_for 'blocks' %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</splide-carousel>
+{% schema %}
+{
+  "name": "Partners",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "_partner"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partners Section",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

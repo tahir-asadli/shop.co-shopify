@@ -199,6 +199,56 @@ class ProductGallery extends HTMLElement {
 customElements.define('product-gallery', ProductGallery);
 
 
+class SplideCarousel extends HTMLElement {
+  constructor() {
+    super();
+
+    this.splideEl = this.querySelector('.splide-carousel');
+
+  }
+
+  initCarousel() {
+    new Splide(this.splideEl, {
+      type: 'loop',
+      perPage: 5,
+      perMove: 1,
+      pagination: false,
+      arrows: false,
+      autoplay: true,
+      interval: 50000,
+      breakpoints: {
+        1600: {
+          perPage: 5,
+        },
+        1400: {
+          perPage: 4,
+        },
+        1200: {
+          perPage: 3,
+        },
+        1024: {
+          perPage: 2,
+        },
+        600: {
+          perPage: 1,
+        },
+      },
+    }).mount();
+  }
+
+  connectedCallback() {
+    if (this.splideEl) {
+      this.initCarousel();
+    }
+  }
+
+  disconnectedCallback() {
+    this.splide && this.splide.destroy();
+  }
+}
+
+customElements.define('splide-carousel', SplideCarousel);
+
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
   console.log('loaded');

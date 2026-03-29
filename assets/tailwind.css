@@ -735,6 +735,11 @@
       position: absolute;
     }
   }
+  .\[\&_img\]\:h-8 {
+    & img {
+      height: calc(var(--spacing) * 8);
+    }
+  }
   .\[\&_img\]\:h-full {
     & img {
       height: 100%;
@@ -743,11 +748,6 @@
   .\[\&_img\]\:w-full {
     & img {
       width: 100%;
-    }
-  }
-  .\[\&_img\]\:object-contain {
-    & img {
-      object-fit: contain;
     }
   }
   .\[\&_img\]\:object-cover {
