@@ -8,7 +8,15 @@
 @custom-variant hover (&:hover);
 
 /* Column spans */
-@source inline("col-span-{1..4}");
+@source inline("col-span-{1..30}");
+@source inline("sm:col-span-{1..30}");
+@source inline("lg:col-span-{1..30}");
+@source inline("xl:col-span-{1..30}");
+@source inline("grid-cols-{1..30}");
+@source inline("sm:grid-cols-{1..30}");
+@source inline("lg:grid-cols-{1..30}");
+@source inline("xl:grid-cols-{1..30}");
+@source inline("gap-{1..10}");
 
 @theme {
   --font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;

@@ -1,6 +1,8 @@
-<div>
-  <h3>{{ block.settings.heading }}</h3>
-  <div>
+<div class="sm:col-span-{{ block.settings.mobile_column_span }} lg:col-span-{{ block.settings.tablet_column_span }} xl:col-span-{{ block.settings.column_span }}">
+  {% if block.settings.heading != blank %}
+    <h4 class="text-base font-medium uppercase mb-6.5">{{ block.settings.heading }}</h4>
+  {% endif %}
+  <div class="flex flex-col gap-{{ block.settings.gap }}">
     {% content_for 'blocks' %}
   </div>
 </div>
@@ -8,11 +10,44 @@
 {% schema %}
 {
   "name": "Column",
+  "tag": null,
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "column_span",
+      "label": "Column span",
+      "min": 1,
+      "max": 30,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "tablet_column_span",
+      "label": "Tablet column span",
+      "min": 1,
+      "max": 30,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "mobile_column_span",
+      "label": "Mobile column span",
+      "min": 1,
+      "max": 30,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 1,
+      "max": 10,
+      "default": 6
     }
   ],
   "blocks": [

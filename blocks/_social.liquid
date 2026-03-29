@@ -1,0 +1,62 @@
+<a
+  href="{{  block.settings.url }}"
+  title="{{ block.settings.title }}"
+  class="flex justify-center items-center size-7 rounded-full bg-white text-black border border-black/10 hover:bg-black hover:text-white transition [&_svg]:size-3"
+>
+  {% render 'icon', icon: block.settings.icon %}
+</a>
+
+{% schema %}
+{
+  "name": "Social",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "URL"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        {
+          "value": "facebook",
+          "label": "Facebook"
+        },
+        {
+          "value": "x",
+          "label": "X"
+        },
+        {
+          "value": "instagram",
+          "label": "Instagram"
+        },
+        {
+          "value": "linkedin",
+          "label": "LinkedIn"
+        },
+        {
+          "value": "youtube",
+          "label": "YouTube"
+        },
+        {
+          "value": "tiktok",
+          "label": "TikTok"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social"
+    }
+  ]
+}
+{% endschema %}

@@ -1,6 +1,8 @@
 <footer>
-  <div class="container flex gap-10">
-    {% content_for 'blocks' %}
+  <div class="container">
+    <div class="grid sm:grid-cols-{{section.settings.mobile_column_count}} lg:grid-cols-{{section.settings.tablet_column_count}} xl:grid-cols-{{section.settings.column_count}} gap-10 pb-14 border-b border-b-black/10">
+      {% content_for 'blocks' %}
+    </div>
   </div>
 </footer>
 
@@ -9,15 +11,28 @@
   "name": "t:general.footer",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type": "range",
+      "id": "column_count",
+      "label": "Column count",
+      "min": 1,
+      "max": 30,
+      "default": 22
     },
     {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
+      "type": "range",
+      "id": "tablet_column_count",
+      "label": "Tablet column count",
+      "min": 1,
+      "max": 30,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "mobile_column_count",
+      "label": "Mobile column count",
+      "min": 1,
+      "max": 30,
+      "default": 2
     }
   ],
   "blocks": [
