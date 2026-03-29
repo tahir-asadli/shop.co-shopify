@@ -7,6 +7,9 @@
 @source "../config/*.json";
 @custom-variant hover (&:hover);
 
+/* Column spans */
+@source inline("col-span-{1..4}");
+
 @theme {
   --font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-anton: 'Anton', system-ui, -apple-system, 'Segoe UI', sans-serif;
