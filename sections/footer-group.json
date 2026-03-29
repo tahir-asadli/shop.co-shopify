@@ -18,21 +18,80 @@
           "type": "column",
           "name": "Column",
           "settings": {
-            "heading": "Column 1"
+            "heading": "",
+            "column_span": 6,
+            "tablet_column_span": 4,
+            "mobile_column_span": 2,
+            "gap": 6
           },
           "blocks": {
+            "socials_tFxGKk": {
+              "type": "socials",
+              "name": "Socials",
+              "settings": {},
+              "blocks": {
+                "social_pRTaCF": {
+                  "type": "_social",
+                  "name": "Social",
+                  "settings": {
+                    "title": "TikTok",
+                    "url": "/#",
+                    "icon": "tiktok"
+                  },
+                  "blocks": {}
+                },
+                "social_GprT36": {
+                  "type": "_social",
+                  "name": "Social",
+                  "settings": {
+                    "title": "Instagram",
+                    "url": "/#",
+                    "icon": "instagram"
+                  },
+                  "blocks": {}
+                },
+                "social_9J8DFX": {
+                  "type": "_social",
+                  "name": "Social",
+                  "settings": {
+                    "title": "Facebook",
+                    "url": "/#",
+                    "icon": "facebook"
+                  },
+                  "blocks": {}
+                },
+                "social_iLbGzz": {
+                  "type": "_social",
+                  "name": "Social",
+                  "settings": {
+                    "title": "X",
+                    "url": "/#",
+                    "icon": "x"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "social_pRTaCF",
+                "social_GprT36",
+                "social_9J8DFX",
+                "social_iLbGzz"
+              ]
+            },
             "logo_tN6yVK": {
               "type": "logo",
               "name": "Logo",
               "settings": {},
               "blocks": {}
             },
-            "heading_Ld8kfq": {
-              "type": "heading",
-              "name": "Heading",
+            "text_qUQGpA": {
+              "type": "text",
+              "name": "t:general.text",
               "settings": {
-                "heading_text": "Heading Text",
-                "heading_size": "h1"
+                "text": "We have clothes that suits your style and which you’re proud to wear. From women to men.",
+                "text_style": "text--normal",
+                "alignment": "left",
+                "color": "#616262"
               },
               "blocks": {}
             },
@@ -46,8 +105,9 @@
             }
           },
           "block_order": [
+            "socials_tFxGKk",
             "logo_tN6yVK",
-            "heading_Ld8kfq",
+            "text_qUQGpA",
             "copyright_k6mDaC"
           ]
         },
@@ -55,40 +115,62 @@
           "type": "column",
           "name": "Column",
           "settings": {
-            "heading": "Column 2"
+            "heading": "Company",
+            "column_span": 4,
+            "tablet_column_span": 1,
+            "mobile_column_span": 2,
+            "gap": 6
           },
-          "blocks": {
-            "payments_rBVBFp": {
-              "type": "payments",
-              "name": "Payments",
-              "settings": {
-                "show_payment_icons": true
-              },
-              "blocks": {}
-            },
-            "heading_8wLhhX": {
-              "type": "heading",
-              "name": "Heading",
-              "settings": {
-                "heading_text": "Heading Text",
-                "heading_size": "h4"
-              },
-              "blocks": {}
-            }
+          "blocks": {}
+        },
+        "column_a3PCai": {
+          "type": "column",
+          "name": "Column",
+          "settings": {
+            "heading": "Help",
+            "column_span": 4,
+            "tablet_column_span": 1,
+            "mobile_column_span": 1,
+            "gap": 6
           },
-          "block_order": [
-            "payments_rBVBFp",
-            "heading_8wLhhX"
-          ]
+          "blocks": {}
+        },
+        "column_bKrMkn": {
+          "type": "column",
+          "name": "Column",
+          "settings": {
+            "heading": "FAQ",
+            "column_span": 4,
+            "tablet_column_span": 1,
+            "mobile_column_span": 1,
+            "gap": 6
+          },
+          "blocks": {}
+        },
+        "column_EamrGq": {
+          "type": "column",
+          "name": "Column",
+          "settings": {
+            "heading": "Resources",
+            "column_span": 4,
+            "tablet_column_span": 1,
+            "mobile_column_span": 1,
+            "gap": 6
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "column_wgwVdf",
-        "column_zNaja4"
+        "column_zNaja4",
+        "column_a3PCai",
+        "column_bKrMkn",
+        "column_EamrGq"
       ],
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "column_count": 22,
+        "tablet_column_count": 4,
+        "mobile_column_count": 2
       }
     }
   },
