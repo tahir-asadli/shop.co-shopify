@@ -9,7 +9,6 @@ class Announcement extends HTMLElement {
     announcementElement.remove();
   }
 }
-
 customElements.define('announcement-bar', Announcement);
 
 class VariantPicker extends HTMLElement {
@@ -60,7 +59,6 @@ class VariantPicker extends HTMLElement {
   }
 
 }
-
 customElements.define('variant-picker', VariantPicker);
 
 class ProductForm extends HTMLElement {
@@ -139,7 +137,6 @@ class ProductForm extends HTMLElement {
       });
   }
 }
-
 customElements.define('product-form', ProductForm);
 
 class ProductGallery extends HTMLElement {
@@ -195,9 +192,7 @@ class ProductGallery extends HTMLElement {
     this.mainImage.srcset = imageSrcSet;
   }
 }
-
 customElements.define('product-gallery', ProductGallery);
-
 
 class SplideCarousel extends HTMLElement {
   constructor() {
@@ -246,8 +241,58 @@ class SplideCarousel extends HTMLElement {
     this.splide && this.splide.destroy();
   }
 }
-
 customElements.define('splide-carousel', SplideCarousel);
+
+class ReviewsCarousel extends HTMLElement {
+  constructor() {
+    super();
+
+    this.splideEl = this.querySelector('.splide.reviews');
+
+  }
+
+  initCarousel() {
+
+    new Splide(this.splideEl, {
+      type: 'loop',
+      perPage: 5,
+      perMove: 1,
+      pagination: false,
+      arrows: true,
+      autoplay: true,
+      gap: 20,
+      interval: 5000,
+      breakpoints: {
+        1600: {
+          perPage: 5,
+        },
+        1400: {
+          perPage: 4,
+        },
+        1200: {
+          perPage: 3,
+        },
+        1024: {
+          perPage: 2,
+        },
+        600: {
+          perPage: 1,
+        },
+      },
+    }).mount();
+  }
+
+  connectedCallback() {
+    if (this.splideEl) {
+      this.initCarousel();
+    }
+  }
+
+  disconnectedCallback() {
+    this.splide && this.splide.destroy();
+  }
+}
+customElements.define('reviews-carousel', ReviewsCarousel);
 
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
