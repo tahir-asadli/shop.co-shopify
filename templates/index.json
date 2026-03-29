@@ -92,6 +92,60 @@
         "hero_image": "shopify://shop_images/hero.png"
       }
     },
+    "partners_BfCpir": {
+      "type": "partners",
+      "blocks": {
+        "partner_mDBUwR": {
+          "type": "_partner",
+          "name": "Partner Logo",
+          "settings": {
+            "partner_logo": "shopify://shop_images/zara.svg"
+          },
+          "blocks": {}
+        },
+        "partner_z7Ty9P": {
+          "type": "_partner",
+          "name": "Partner Logo",
+          "settings": {
+            "partner_logo": "shopify://shop_images/gucci.svg"
+          },
+          "blocks": {}
+        },
+        "partner_X4jWw8": {
+          "type": "_partner",
+          "name": "Partner Logo",
+          "settings": {
+            "partner_logo": "shopify://shop_images/prada.svg"
+          },
+          "blocks": {}
+        },
+        "partner_YXXXAY": {
+          "type": "_partner",
+          "name": "Partner Logo",
+          "settings": {
+            "partner_logo": "shopify://shop_images/calvin-klein.svg"
+          },
+          "blocks": {}
+        },
+        "partner_aCrJc3": {
+          "type": "_partner",
+          "name": "Partner Logo",
+          "settings": {
+            "partner_logo": "shopify://shop_images/versace.svg"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "partner_mDBUwR",
+        "partner_z7Ty9P",
+        "partner_X4jWw8",
+        "partner_YXXXAY",
+        "partner_aCrJc3"
+      ],
+      "name": "Partners Section",
+      "settings": {}
+    },
     "products_b3gb4U": {
       "type": "products",
       "name": "Products",
@@ -102,6 +156,7 @@
   },
   "order": [
     "hero_fgdeqD",
+    "partners_BfCpir",
     "products_b3gb4U"
   ]
 }
