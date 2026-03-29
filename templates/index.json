@@ -152,11 +152,128 @@
       "settings": {
         "collection": "frontpage"
       }
+    },
+    "collections_HY8QfE": {
+      "type": "collections",
+      "blocks": {
+        "collection_Cye6M3": {
+          "type": "_collection",
+          "name": "Collection",
+          "settings": {
+            "collection": "casual",
+            "column_span": "col-span-2"
+          },
+          "blocks": {}
+        },
+        "collection_wtA4Mm": {
+          "type": "_collection",
+          "name": "Collection",
+          "settings": {
+            "collection": "formal",
+            "column_span": "col-span-3"
+          },
+          "blocks": {}
+        },
+        "collection_eaL3K8": {
+          "type": "_collection",
+          "name": "Collection",
+          "settings": {
+            "collection": "party",
+            "column_span": "col-span-3"
+          },
+          "blocks": {}
+        },
+        "collection_qhpNLg": {
+          "type": "_collection",
+          "name": "Collection",
+          "settings": {
+            "collection": "gym",
+            "column_span": "col-span-2"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "collection_Cye6M3",
+        "collection_wtA4Mm",
+        "collection_eaL3K8",
+        "collection_qhpNLg"
+      ],
+      "name": "Collections",
+      "settings": {
+        "heading": "BROWSE BY DRESS STYLE"
+      }
+    },
+    "newsletter_Ldb8rt": {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": {
+        "heading": "STAY UPTO DATE ABOUT OUR LATEST OFFERS",
+        "button_label": "Subscribe to newsletter"
+      }
+    },
+    "reviews_jTU6iE": {
+      "type": "reviews",
+      "blocks": {
+        "review_VmKe36": {
+          "type": "_review",
+          "name": "Review",
+          "settings": {
+            "author": "Mooen",
+            "content": "\"As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends.\"",
+            "rating": 5
+          },
+          "blocks": {}
+        },
+        "review_cjgGnK": {
+          "type": "_review",
+          "name": "Review",
+          "settings": {
+            "author": "James L.",
+            "content": "\"As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends.\"",
+            "rating": 4
+          },
+          "blocks": {}
+        },
+        "review_Hq6kGj": {
+          "type": "_review",
+          "name": "Review",
+          "settings": {
+            "author": "Alex K.",
+            "content": "\"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.\"",
+            "rating": 5
+          },
+          "blocks": {}
+        },
+        "review_VbUWwT": {
+          "type": "_review",
+          "name": "Review",
+          "settings": {
+            "author": "Sarah M.",
+            "content": "\"I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.\"",
+            "rating": 4
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "review_VmKe36",
+        "review_cjgGnK",
+        "review_Hq6kGj",
+        "review_VbUWwT"
+      ],
+      "name": "Reviews",
+      "settings": {
+        "heading": "OUR HAPPY CUSTOMERS"
+      }
     }
   },
   "order": [
     "hero_fgdeqD",
     "partners_BfCpir",
-    "products_b3gb4U"
+    "products_b3gb4U",
+    "collections_HY8QfE",
+    "newsletter_Ldb8rt",
+    "reviews_jTU6iE"
   ]
 }
