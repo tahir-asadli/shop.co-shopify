@@ -14,15 +14,12 @@ customElements.define('announcement-bar', Announcement);
 class VariantPicker extends HTMLElement {
   constructor() {
     super();
-    console.log('variant picker');
-  }
-
-  get sectionId() {
-    return this.dataset.sectionId;
+    this.productId = this.dataset.productId;
+    this.productHandle = this.dataset.productHandle;
+    this.sectionId = this.dataset.sectionId;
   }
 
   connectedCallback() {
-    console.log('connected variant-picker', this.sectionId);
     this.variantSelectors = this.querySelectorAll('input[type="radio"]');
     this.variantSelectors.forEach(selector => {
       selector.addEventListener('change', this.handleChange.bind(this));
@@ -30,7 +27,6 @@ class VariantPicker extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.log('disconnected variant-picker', this.sectionId);
     this.variantSelectors.forEach(selector => {
       selector.removeEventListener('change', this.handleChange.bind(this));
     });
@@ -38,7 +34,7 @@ class VariantPicker extends HTMLElement {
 
   handleChange(event) {
     const input = event.currentTarget;
-    const url = `${window.location.pathname}?variant=${input.value}&section_id=${this.sectionId}`;
+    const url = `${window.location.origin}/products/${this.productHandle}?variant=${input.value}&section_id=${this.sectionId}`;
     fetch(url)
       .then(res => res.text())
       .then(html => {
@@ -52,10 +48,9 @@ class VariantPicker extends HTMLElement {
         }
         const newURL = new URL(url, window.location.origin);
         newURL.searchParams.delete('section_id');
-        window.history.replaceState({}, '', newURL);
+        // window.history.replaceState({}, '', newURL);
       })
       .catch(err => console.error('Error fetching variant data:', err));
-    console.log('change', event.currentTarget, event.target.value, url);
   }
 
 }
@@ -64,24 +59,20 @@ customElements.define('variant-picker', VariantPicker);
 class ProductForm extends HTMLElement {
   constructor() {
     super();
-    console.log('product form');
-  }
-
-  connectedCallback() {
-    console.log('connected product-form');
     this.form = this.querySelector('form');
     this.fieldset = this.querySelector('fieldset');
 
     this.quantityInput = this.form.querySelector(
       "input[name='quantity']"
     );
-    console.log('this.form', this.form);
-    console.log('this.quantityInput', this.quantityInput);
-    this.form.addEventListener('submit', this.handleSubmit.bind(this));
     this.minusButton = this.querySelector("[data-quantity-minus]");
     this.plusButton = this.querySelector("[data-quantity-plus]");
-    console.log('this.plusButton', this.plusButton);
-    console.log('this.minusButton', this.minusButton);
+  }
+
+  connectedCallback() {
+    console.log('ProductForm connected');
+
+    this.form.addEventListener('submit', this.handleSubmit.bind(this));
 
     this.handleMinusClick = this.handleMinusClick.bind(this);
     this.handlePlusClick = this.handlePlusClick.bind(this);
@@ -92,29 +83,29 @@ class ProductForm extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.log('disconnected product-form');
+    console.log('ProductForm disconnected');
     this.form.removeEventListener('submit', this.handleSubmit.bind(this));
     this.minusButton.removeEventListener("click", this.handleMinusClick);
     this.plusButton.removeEventListener("click", this.handlePlusClick);
   }
 
   handleMinusClick() {
-    console.log('this.quantityInput.value', this.quantityInput.value);
+    console.log('handleMinusClick');
 
     if (parseInt(this.quantityInput.value) === 1) {
       return;
     }
     this.quantityInput.value = parseInt(this.quantityInput.value) - 1;
-    console.log('this.quantityInput', this.quantityInput.value);
   }
 
   handlePlusClick() {
+    console.log('handlePlusClick');
+
     const maxQuantity = parseInt(this.quantityInput.getAttribute('max'));
     if (parseInt(this.quantityInput.value) === maxQuantity) {
       return;
     }
     this.quantityInput.value = parseInt(this.quantityInput.value) + 1;
-    console.log('this.quantityInput', this.quantityInput.value);
   }
 
   handleSubmit(event) {
@@ -142,52 +133,27 @@ customElements.define('product-form', ProductForm);
 class ProductGallery extends HTMLElement {
   constructor() {
     super();
-    console.log('product gallery');
   }
 
   connectedCallback() {
-    console.log('connected product-gallery');
     this.thumbnails = this.querySelectorAll('.product-gallery-thumbnails span');
     this.mainImage = this.querySelector('.product-gallery-main-image');
-
-    console.log('this.thumbnails', this.thumbnails);
-    console.log('this.mainImage', this.mainImage);
     this.updateMainImage = this.updateMainImage.bind(this);
     if (this.thumbnails.length > 0 && this.mainImage) {
-      console.log('done');
-
       this.thumbnails.forEach(thumbnail => {
-        console.log('thumbnail.addEventListener');
-
         thumbnail.addEventListener('click', this.updateMainImage);
       });
-
     }
-
-    this.handleMinusClick = this.handleMinusClick.bind(this);
-    // this.minusButton.addEventListener("click", this.handleMinusClick);
-
   }
 
   disconnectedCallback() {
-    console.log('disconnected product-gallery');
-    // this.form.removeEventListener('submit', this.handleSubmit.bind(this));
-    // this.minusButton.removeEventListener("click", this.handleMinusClick);
-    // this.plusButton.removeEventListener("click", this.handlePlusClick);
   }
 
   updateMainImage(event) {
-    console.log('clikde thumbnail.addEventListener');
-
     const span = event.currentTarget;
     const thumbImage = span.querySelector('img');
-    console.log('thumbImage', thumbImage);
-
-
     const imageSrc = thumbImage.getAttribute('src');
     const imageSrcSet = thumbImage.getAttribute('srcset');
-    console.log('imageSrc', imageSrc);
-    console.log('imageSrcSet', imageSrcSet);
     this.mainImage.src = imageSrc;
     this.mainImage.srcset = imageSrcSet;
   }
@@ -197,9 +163,7 @@ customElements.define('product-gallery', ProductGallery);
 class SplideCarousel extends HTMLElement {
   constructor() {
     super();
-
     this.splideEl = this.querySelector('.splide-carousel');
-
   }
 
   initCarousel() {
@@ -246,13 +210,10 @@ customElements.define('splide-carousel', SplideCarousel);
 class ReviewsCarousel extends HTMLElement {
   constructor() {
     super();
-
     this.splideEl = this.querySelector('.splide.reviews');
-
   }
 
   initCarousel() {
-
     new Splide(this.splideEl, {
       type: 'loop',
       perPage: 5,
@@ -336,7 +297,6 @@ customElements.define('header-menu', HeaderMenu);
 class SearchForm extends HTMLElement {
   constructor() {
     super();
-    this.searchComponent = this.querySelector('.search-component');
     this.form = this.querySelector('form');
     this.input = this.form.querySelector('input[name="q"]');
     this.clearButton = this.form.querySelector('.clear');
@@ -351,9 +311,10 @@ class SearchForm extends HTMLElement {
     this.clearButton.addEventListener('click', this.handleClear);
 
     if (this.input.value.trim() !== '') {
-      this.searchComponent.classList.add('search-active');
+
+      this.classList.add('search-active');
     } else {
-      this.searchComponent.classList.remove('search-active');
+      this.classList.remove('search-active');
     }
   }
 
@@ -378,37 +339,129 @@ class SearchForm extends HTMLElement {
 }
 customElements.define('search-form', SearchForm);
 
+class ProductCard extends HTMLElement {
+  constructor() {
+    super();
+    this.productId = this.dataset.productId;
+
+    this.productHandle = this.dataset.productHandle;
+    this.chooseOptionsButtons = this.querySelectorAll('.choose-options');
+    this.addToCartButtons = this.querySelectorAll('.add-to-cart');
+  }
+
+  connectedCallback() {
+    this.chooseOptionsButtons.forEach(button => {
+      button.addEventListener('click', this.handleChooseOptionsClick.bind(this));
+    });
+    this.addToCartButtons.forEach(button => {
+      button.addEventListener('click', this.handleAddToCartClick.bind(this));
+    });
+  }
+
+  disconnectedCallback() {
+    this.chooseOptionsButtons.forEach(button => {
+      button.removeEventListener('click', this.handleChooseOptionsClick);
+    });
+    this.addToCartButtons.forEach(button => {
+      button.removeEventListener('click', this.handleAddToCartClick);
+    });
+  }
+
+  handleChooseOptionsClick(event) {
+    const dataEvent = new CustomEvent('product-dialog-open', {
+      detail: {
+        productId: this.productId,
+        productHandle: this.productHandle,
+      },
+      bubbles: true
+    });
+    document.body.dispatchEvent(dataEvent);
+  }
+
+  handleAddToCartClick(event) {
+    const button = event.currentTarget;
+    const variantId = button.dataset.productId;
+  }
+
+}
+customElements.define('product-card', ProductCard);
+
+class ProductDialog extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.dialog = this.querySelector('dialog');
+    this.closeButton = this.dialog.querySelector('#close-dialog');
+
+    this.handleCloseButtonClick = this.handleCloseButtonClick.bind(this);
+    this.closeButton.addEventListener('click', this.handleCloseButtonClick);
+
+    document.body.addEventListener('product-dialog-open', (event) => {
+      const url = `/products/${event.detail.productHandle}?product_id=${event.detail.productId}`;
+      fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          const productForm = tempDiv.querySelector('#main-product');
+          console.log('productForm', productForm);
+
+          if (productForm) {
+            this.dialog.querySelector('.dialog-content').innerHTML = productForm.outerHTML;
+          }
+        })
+        .catch(err => console.error('Error fetching product dialog content:', err));
+      this.dialog.showModal();
+    });
+    document.body.addEventListener('product-dialog-close', () => {
+      console.log('Dialog closed');
+      this.dialog.close();
+    });
+
+  }
+
+  disconnectedCallback() {
+    this.closeButton.removeEventListener('click', this.handleCloseButtonClick);
+  }
+
+  handleCloseButtonClick() {
+    this.dialog.close();
+  }
+}
+customElements.define('product-dialog', ProductDialog);
+
+
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
-  console.log('loaded');
 
-  const dialog = document.querySelector('#product-dialog');
-  const closeButton = dialog.querySelector('#close-dialog');
+  // const dialog = document.querySelector('#product-dialog');
+  // const closeButton = dialog.querySelector('#close-dialog');
 
-  closeButton.addEventListener('click', () => {
-    dialog.close();
-  });
+  // closeButton.addEventListener('click', () => {
+  //   dialog.close();
+  // });
 
-  const addToCartButtons = document.querySelectorAll('.add-to-cart');
-  const chooseOptionsButtons = document.querySelectorAll('.choose-options');
-  console.log('addToCartButtons', addToCartButtons);
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const productId = button.getAttribute('data-product-id');
-      addToCart(productId, 1)
-        .then(cart => console.log('Added!', cart))
-        .catch(err => console.error(err));
-    });
-  });
+  // const addToCartButtons = document.querySelectorAll('.add-to-cart');
+  // const chooseOptionsButtons = document.querySelectorAll('.choose-options');
+  // addToCartButtons.forEach(button => {
+  //   button.addEventListener('click', () => {
+  //     const productId = button.getAttribute('data-product-id');
+  //     addToCart(productId, 1)
+  //       .then(cart => console.log('Added!', cart))
+  //       .catch(err => console.error(err));
+  //   });
+  // });
 
-  chooseOptionsButtons.forEach(button => {
-    button.addEventListener('click', async () => {
-      const handle = button.dataset.productHandle;
-      const product = await fetchProduct(handle);
+  // chooseOptionsButtons.forEach(button => {
+  //   button.addEventListener('click', async () => {
+  //     const handle = button.dataset.productHandle;
+  //     const product = await fetchProduct(handle);
 
-      openDialog(product);
-    });
-  });
+  //     openDialog(product);
+  //   });
+  // });
 
   async function addToCart(variantId, quantity = 1) {
     const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
@@ -434,15 +487,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return data;
   }
-  async function fetchProduct(handle) {
-    const res = await fetch(`/products/${handle}.js`);
-    return await res.json();
-  }
+  // async function fetchProduct(handle) {
+  //   const res = await fetch(`/products/${handle}.js`);
+  //   return await res.json();
+  // }
 
-  function openDialog(product) {
-    const dialog = document.querySelector('#product-dialog');
-    dialog.querySelector('h2').textContent = product.title;
-    dialog.querySelector('p').textContent = product.description;
+  function openDialog() {
+    // product
+    // const dialog = document.querySelector('#product-dialog');
+    // dialog.querySelector('h2').textContent = product.title;
+    // dialog.querySelector('p').textContent = product.description;
     dialog.showModal();
   }
 

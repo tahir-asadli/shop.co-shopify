@@ -42,13 +42,11 @@
 
     {% sections 'footer-group' %}
 
-    <dialog id="product-dialog" class="rounded-2xl p-6 border border-gray-300">
-      <div>
-        <h2>Dialog Title</h2>
-        <p>This is a native HTML dialog box content.</p>
-        <form action="/add" method="dialog"></form>
-      </div>
-      <button id="close-dialog" class="absolute top-2 right-2 text-2xl">&times;</button>
-    </dialog>
+    <product-dialog>
+      <dialog class="rounded-2xl p-6 border border-gray-300">
+        <div class="dialog-content"></div>
+        <button id="close-dialog" class="absolute top-2 right-2 text-2xl">&times;</button>
+      </dialog>
+    </product-dialog>
   </body>
 </html>

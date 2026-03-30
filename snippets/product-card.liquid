@@ -4,7 +4,11 @@
     assign featured_image = product.featured_media.preview_image
   endif
 %}
-<article class="rounded-2xl group">
+<product-card
+  class="rounded-2xl group"
+  data-product-id="{{ product.selected_or_first_available_variant.id }}"
+  data-product-handle="{{ product.handle }}"
+>
   {% comment %} p-10  {% endcomment %}
   <div class="bg-gray-100 rounded-2xl mb-2 relative">
     {% if featured_image != blank %}
@@ -21,15 +25,15 @@
     <div class="absolute inset-0 bg-black/10 flex items-center justify-center gap-4 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
       {% if product.variants.size > 1 %}
         <button
+          type="button"
           class="button px-5 py-2 text-sm choose-options"
-          data-product-handle="{{ product.handle }}"
         >
           Choose Options
         </button>
       {% else %}
         <button
+          type="button"
           class="button px-5 py-2 text-sm add-to-cart"
-          data-product-id="{{ product.selected_or_first_available_variant.id }}"
         >
           Add to Cart
         </button>
@@ -52,4 +56,4 @@
   <div class="flex items-center gap-4">
     <span class="text-2xl font-bold">{{ product.price | money }}</span>
   </div>
-</article>
+</product-card>

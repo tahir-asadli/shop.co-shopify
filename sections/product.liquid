@@ -10,8 +10,8 @@
 <script type="application/json" data-selected-variant>
   {{ product.selected_or_first_available_variant | json }}
 </script>
-<product-form>
-  <section section-id="{{ section.id }}" class="product-section py-10">
+<section section-id="{{ section.id }}" id="main-product" class="product-section py-10">
+  <product-form>
     {% form 'product', product %}
       <fieldset>
         <div class="container">
@@ -77,7 +77,11 @@
                 value="{{ product.selected_or_first_available_variant.id }}"
               >
               {%- unless product.has_only_default_variant -%}
-                <variant-picker data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
+                <variant-picker
+                  data-section-id="{{ section.id }}"
+                  data-product-id="{{ product.id }}"
+                  data-product-handle="{{ product.handle }}"
+                >
                   <div>
                     {% for option in product.options_with_values %}
                       <div class="border-b border-b-black/10 pb-5 mb-5">
@@ -152,8 +156,8 @@
         </div>
       </fieldset>
     {% endform %}
-  </section>
-</product-form>
+  </product-form>
+</section>
 
 {% schema %}
 {
