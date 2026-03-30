@@ -361,4 +361,34 @@ document.addEventListener("DOMContentLoaded", function () {
     dialog.querySelector('p').textContent = product.description;
     dialog.showModal();
   }
+
+
+
+
+
+
+
+
+
+  const headerLinks = document.querySelectorAll('.header-link');
+
+  headerLinks.forEach((link) => {
+    link.addEventListener('mouseenter', function () {
+      const content = this.querySelector('.header-link-content');
+      if (content) {
+        // Update inner scroll height
+        const contentHeight = content.scrollHeight;
+        content.style.height = contentHeight + 'px';
+        content.classList.add('header-content-visible');
+      }
+    });
+
+    link.addEventListener('mouseleave', function () {
+      const content = this.querySelector('.header-link-content');
+      if (content) {
+        content.classList.remove('header-content-visible');
+        content.style.height = '0';
+      }
+    });
+  });
 });

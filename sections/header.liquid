@@ -1,77 +1,173 @@
-<header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
-
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
+<header class="bg-white">
+  <div class="container flex gap-10 items-center h-20">
+    <div class="lg:hidden relative z-3 in-[.mobile-menu-open]:z-4">
+      <button class="size-10 flex flex-col gap-1.5 justify-center items-center cursor-pointer" id="mobile-menu-button">
+        <span
+          class="h-0.5 w-7 bg-black transition-all relative origin-center in-[.mobile-menu-open]:rotate-45 in-[.mobile-menu-open]:top-1.75"
+        ></span>
+        <span class="h-0.5 w-7 bg-black in-[.mobile-menu-open]:hidden"></span>
+        <span
+          class="h-0.5 w-7 bg-black transition-all relative origin-center in-[.mobile-menu-open]:-rotate-45 in-[.mobile-menu-open]:-top-0.25"
+        ></span>
+      </button>
+    </div>
+    {% if shop.brand.logo != blank %}
+      {%- assign logo_alt = shop.brand.logo.alt | default: shop.name | escape -%}
+      <div class="logo">
+        {{ shop.brand.logo | image_url: width: 160 | image_tag: alt: logo_alt | link_to: routes.root_url }}
+      </div>
+    {% else %}
+      <div class="logo">
+        {{ section.settings.title | link_to: routes.root_url }}
+      </div>
     {% endif %}
-
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
-      {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+    <div class="hidden lg:block">
+      <ul class="flex">
+        {% for link in section.settings.menu.links %}
+          <li class="relative header-link group">
+            <a class="inline-flex relative group pr-6 px-3" href="{{link.url}}">
+              <span class="inline-block h-20 overflow-hidden">
+                <span class="relative flex flex-col group-hover:-translate-y-20 transition-transform duration-300">
+                  <span class="inline-flex items-center h-20">{{ link.title }}</span>
+                  <span class="inline-flex items-center h-20 text-gray-900">{{ link.title }}</span>
+                </span>
+              </span>
+              {% if link.links != blank %}
+                {% render 'icon', icon: 'down-arrow' %}
+              {% endif %}
+            </a>
+            {% if link.links != blank %}
+              <div
+                class="header-link-content absolute top-30 left-0 w-50 z-1 overflow-hidden transition-all duration-100 opacity-0 h-0"
+                style="height: 0px;"
+              >
+                <div class="p-2">
+                  <div class="bg-white shadow rounded-md border border-gray-100 w-full">
+                    <div class="p-1 w-full">
+                      <ul class="flex flex-col gap-1">
+                        {% for childlink in link.links %}
+                          <li>
+                            <a
+                              href="{{ childlink.url }}"
+                              class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100"
+                            >
+                              {{ childlink.title }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 </header>
 
-{% stylesheet %}
-  header {
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
-  "name": "t:general.header",
+  "name": "Header",
   "settings": [
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "{{ shop.name }}"
     },
     {
       "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "id": "menu",
+      "label": "Menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header"
     }
   ]
 }
 {% endschema %}
+
+{% comment %}
+  <header>
+    <h2 class="header__title">
+      {{ shop.name | link_to: routes.root_url }}
+    </h2>
+
+    <div class="header__menu">
+      {% for link in section.settings.menu.links %}
+        {{ link.title | link_to: link.url }}
+      {% endfor %}
+    </div>
+
+    <div class="header__icons">
+      {% if shop.customer_accounts_enabled %}
+        <shopify-account menu="{{ section.settings.customer_account_menu }}">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </shopify-account>
+      {% endif %}
+
+      <a href="{{ routes.cart_url }}">
+        {% if cart.item_count > 0 %}
+          <sup>{{ cart.item_count }}</sup>
+        {% endif %}
+
+        {{ 'icon-cart.svg' | inline_asset_content }}
+      </a>
+    </div>
+  </header>
+
+  {% stylesheet %}
+    header {
+      height: 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header a {
+      position: relative;
+      text-decoration: none;
+      color: var(--color-foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a sup {
+      position: absolute;
+      left: 100%;
+      overflow: hidden;
+      max-width: var(--page-margin);
+    }
+    header svg {
+      width: 2rem;
+    }
+    header .header__menu,
+    header .header__icons {
+      display: flex;
+      gap: 1rem;
+    }
+  {% endstylesheet %}
+
+  {% schema %}
+  {
+    "name": "t:general.header",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "t:labels.menu"
+      },
+      {
+        "type": "link_list",
+        "id": "customer_account_menu",
+        "label": "t:labels.customer_account_menu",
+        "default": "customer-account-main-menu"
+      }
+    ]
+  }
+  {% endschema %}
+{% endcomment %}
