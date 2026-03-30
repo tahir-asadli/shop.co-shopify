@@ -294,6 +294,90 @@ class ReviewsCarousel extends HTMLElement {
 }
 customElements.define('reviews-carousel', ReviewsCarousel);
 
+class HeaderMenu extends HTMLElement {
+  constructor() {
+    super();
+    this.links = this.querySelectorAll('.header-link');
+    this.mouseenter = this.mouseenter.bind(this);
+    this.mouseleave = this.mouseleave.bind(this);
+  }
+  mouseenter(event) {
+    const content = event.currentTarget.querySelector('.header-link-content');
+    if (content) {
+      const contentHeight = content.scrollHeight;
+      content.style.height = contentHeight + 'px';
+      content.classList.add('header-content-visible');
+    }
+  }
+
+  mouseleave(event) {
+    const content = event.currentTarget.querySelector('.header-link-content');
+    if (content) {
+      content.classList.remove('header-content-visible');
+      content.style.height = '0';
+    }
+  }
+  connectedCallback() {
+    this.links.forEach((link) => {
+      link.addEventListener('mouseenter', this.mouseenter);
+      link.addEventListener('mouseleave', this.mouseleave);
+    });
+  }
+
+  disconnectedCallback() {
+    this.links.forEach((link) => {
+      link.removeEventListener('mouseenter', this.mouseenter);
+      link.removeEventListener('mouseleave', this.mouseleave);
+    });
+  }
+}
+customElements.define('header-menu', HeaderMenu);
+
+class SearchForm extends HTMLElement {
+  constructor() {
+    super();
+    this.searchComponent = this.querySelector('.search-component');
+    this.form = this.querySelector('form');
+    this.input = this.form.querySelector('input[name="q"]');
+    this.clearButton = this.form.querySelector('.clear');
+  }
+
+  connectedCallback() {
+
+    this.handleInput = this.handleInput.bind(this);
+    this.handleClear = this.handleClear.bind(this);
+
+    this.input.addEventListener('input', this.handleInput);
+    this.clearButton.addEventListener('click', this.handleClear);
+
+    if (this.input.value.trim() !== '') {
+      this.searchComponent.classList.add('search-active');
+    } else {
+      this.searchComponent.classList.remove('search-active');
+    }
+  }
+
+  disconnectedCallback() {
+    this.input.removeEventListener('input', this.handleInput);
+    this.clearButton.removeEventListener('click', this.handleClear);
+  }
+
+  handleInput() {
+    if (this.input.value.trim() !== '') {
+      this.clearButton.classList.remove('hidden');
+    } else {
+      this.clearButton.classList.add('hidden');
+    }
+  }
+
+  handleClear() {
+    this.input.value = '';
+    this.clearButton.classList.add('hidden');
+    this.input.focus();
+  }
+}
+customElements.define('search-form', SearchForm);
+
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
   console.log('loaded');
@@ -370,25 +454,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-  const headerLinks = document.querySelectorAll('.header-link');
 
-  headerLinks.forEach((link) => {
-    link.addEventListener('mouseenter', function () {
-      const content = this.querySelector('.header-link-content');
-      if (content) {
-        // Update inner scroll height
-        const contentHeight = content.scrollHeight;
-        content.style.height = contentHeight + 'px';
-        content.classList.add('header-content-visible');
-      }
-    });
-
-    link.addEventListener('mouseleave', function () {
-      const content = this.querySelector('.header-link-content');
-      if (content) {
-        content.classList.remove('header-content-visible');
-        content.style.height = '0';
-      }
-    });
-  });
 });

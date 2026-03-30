@@ -381,9 +381,6 @@
       max-width: 96rem;
     }
   }
-  .my-4 {
-    margin-block: calc(var(--spacing) * 4);
-  }
   .my-auto {
     margin-block: auto;
   }
@@ -517,29 +514,11 @@
   .w-7 {
     width: calc(var(--spacing) * 7);
   }
-  .w-20 {
-    width: calc(var(--spacing) * 20);
-  }
-  .w-30 {
-    width: calc(var(--spacing) * 30);
-  }
-  .w-32 {
-    width: calc(var(--spacing) * 32);
-  }
-  .w-32\.5 {
-    width: calc(var(--spacing) * 32.5);
-  }
   .w-42 {
     width: calc(var(--spacing) * 42);
   }
   .w-50 {
     width: calc(var(--spacing) * 50);
-  }
-  .w-100 {
-    width: calc(var(--spacing) * 100);
-  }
-  .w-150 {
-    width: calc(var(--spacing) * 150);
   }
   .w-full {
     width: 100%;
@@ -888,9 +867,6 @@
   .pt-18 {
     padding-top: calc(var(--spacing) * 18);
   }
-  .pt-20 {
-    padding-top: calc(var(--spacing) * 20);
-  }
   .pt-40 {
     padding-top: calc(var(--spacing) * 40);
   }
@@ -911,9 +887,6 @@
   }
   .pb-16 {
     padding-bottom: calc(var(--spacing) * 16);
-  }
-  .pb-20 {
-    padding-bottom: calc(var(--spacing) * 20);
   }
   .pl-12 {
     padding-left: calc(var(--spacing) * 12);
@@ -982,9 +955,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       color: color-mix(in oklab, var(--color-black) 60%, transparent);
     }
-  }
-  .text-gray-500 {
-    color: var(--color-gray-500);
   }
   .text-gray-600 {
     color: var(--color-gray-600);
@@ -1084,11 +1054,6 @@
       opacity: 100%;
     }
   }
-  .group-hover\/submenu\:text-amber-600 {
-    &:is(:where(.group\/submenu):hover *) {
-      color: var(--color-amber-600);
-    }
-  }
   .hover\:bg-black {
     &:hover {
       background-color: var(--color-black);
@@ -1097,11 +1062,6 @@
   .hover\:bg-gray-100 {
     &:hover {
       background-color: var(--color-gray-100);
-    }
-  }
-  .hover\:text-amber-600 {
-    &:hover {
-      color: var(--color-amber-600);
     }
   }
   .hover\:text-white {
@@ -1459,11 +1419,6 @@
       display: none;
     }
   }
-  .md\:w-40 {
-    @media (width >= 48rem) {
-      width: calc(var(--spacing) * 40);
-    }
-  }
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1527,11 +1482,6 @@
   .md\:pb-6 {
     @media (width >= 48rem) {
       padding-bottom: calc(var(--spacing) * 6);
-    }
-  }
-  .md\:text-left {
-    @media (width >= 48rem) {
-      text-align: left;
     }
   }
   .md\:text-4xl {
