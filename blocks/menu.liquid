@@ -1,0 +1,30 @@
+{% if block.settings.menu %}
+  <ul class="flex flex-col gap-2">
+    {% for link in block.settings.menu.links %}
+      <li class="menu__item {{ block.settings.link_preset }}">
+        <a class="inline-block py-1.5 text-black/60" href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Menu",
+  "tag": null,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Menu"
+    }
+  ]
+}
+{% endschema %}

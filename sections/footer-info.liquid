@@ -1,0 +1,34 @@
+<div class="bg-gray-100">
+  <div class="container">
+    <div class="pt-6 pb-10 flex flex-col md:flex-row gap-10 md:gap-2 justify-between">
+      {% for block in section.blocks %}
+        <div class="flex items-center [&_.copyright-text]:text-sm [&_.copyright-text]:text-black/60">
+          {% render block.type, block: block %}
+        </div>
+      {% endfor %}
+      {% comment %}
+          <p class="text-center md:text-left text-sm text-black/60">Shop.co © 2000-2026, All Rights Reserved</p>
+        <div class="text-center md:text-left">
+          <img class="inline-block" src="images/payment-methods.png" alt="Paymnet methods">
+        </div>
+      {% endcomment %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Footer Info",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@theme"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer Info"
+    }
+  ]
+}
+{% endschema %}
