@@ -25,6 +25,12 @@
             "gap": 6
           },
           "blocks": {
+            "logo_tN6yVK": {
+              "type": "logo",
+              "name": "Logo",
+              "settings": {},
+              "blocks": {}
+            },
             "socials_tFxGKk": {
               "type": "socials",
               "name": "Socials",
@@ -78,12 +84,6 @@
                 "social_iLbGzz"
               ]
             },
-            "logo_tN6yVK": {
-              "type": "logo",
-              "name": "Logo",
-              "settings": {},
-              "blocks": {}
-            },
             "text_qUQGpA": {
               "type": "text",
               "name": "t:general.text",
@@ -94,21 +94,12 @@
                 "color": "#616262"
               },
               "blocks": {}
-            },
-            "copyright_k6mDaC": {
-              "type": "copyright",
-              "name": "Copyright",
-              "settings": {
-                "text": "© date Shop.Co. All rights reserved."
-              },
-              "blocks": {}
             }
           },
           "block_order": [
-            "socials_tFxGKk",
             "logo_tN6yVK",
-            "text_qUQGpA",
-            "copyright_k6mDaC"
+            "socials_tFxGKk",
+            "text_qUQGpA"
           ]
         },
         "column_zNaja4": {
@@ -121,7 +112,19 @@
             "mobile_column_span": 2,
             "gap": 6
           },
-          "blocks": {}
+          "blocks": {
+            "menu_Hjnxcx": {
+              "type": "menu",
+              "name": "Menu",
+              "settings": {
+                "menu": "company"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "menu_Hjnxcx"
+          ]
         },
         "column_a3PCai": {
           "type": "column",
@@ -133,7 +136,19 @@
             "mobile_column_span": 1,
             "gap": 6
           },
-          "blocks": {}
+          "blocks": {
+            "menu_kQBk6D": {
+              "type": "menu",
+              "name": "Menu",
+              "settings": {
+                "menu": "help"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "menu_kQBk6D"
+          ]
         },
         "column_bKrMkn": {
           "type": "column",
@@ -145,7 +160,19 @@
             "mobile_column_span": 1,
             "gap": 6
           },
-          "blocks": {}
+          "blocks": {
+            "menu_i9AAWy": {
+              "type": "menu",
+              "name": "Menu",
+              "settings": {
+                "menu": "faq"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "menu_i9AAWy"
+          ]
         },
         "column_EamrGq": {
           "type": "column",
@@ -157,7 +184,19 @@
             "mobile_column_span": 1,
             "gap": 6
           },
-          "blocks": {}
+          "blocks": {
+            "menu_j7k4im": {
+              "type": "menu",
+              "name": "Menu",
+              "settings": {
+                "menu": "resources"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "menu_j7k4im"
+          ]
         }
       },
       "block_order": [
@@ -172,9 +211,37 @@
         "tablet_column_count": 4,
         "mobile_column_count": 2
       }
+    },
+    "footer_info_awUWhQ": {
+      "type": "footer-info",
+      "blocks": {
+        "copyright_4gytnM": {
+          "type": "copyright",
+          "name": "Copyright",
+          "settings": {
+            "text": "© date Shop.Co. All rights reserved."
+          },
+          "blocks": {}
+        },
+        "payments_WgbW4C": {
+          "type": "payments",
+          "name": "Payments",
+          "settings": {
+            "show_payment_icons": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "copyright_4gytnM",
+        "payments_WgbW4C"
+      ],
+      "name": "Footer Info",
+      "settings": {}
     }
   },
   "order": [
-    "footer"
+    "footer",
+    "footer_info_awUWhQ"
   ]
 }

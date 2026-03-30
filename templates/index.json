@@ -204,14 +204,6 @@
         "heading": "BROWSE BY DRESS STYLE"
       }
     },
-    "newsletter_Ldb8rt": {
-      "type": "newsletter",
-      "name": "Newsletter",
-      "settings": {
-        "heading": "STAY UPTO DATE ABOUT OUR LATEST OFFERS",
-        "button_label": "Subscribe to newsletter"
-      }
-    },
     "reviews_jTU6iE": {
       "type": "reviews",
       "blocks": {
@@ -266,6 +258,14 @@
       "settings": {
         "heading": "OUR HAPPY CUSTOMERS"
       }
+    },
+    "newsletter_Ldb8rt": {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": {
+        "heading": "STAY UPTO DATE ABOUT OUR LATEST OFFERS",
+        "button_label": "Subscribe to newsletter"
+      }
     }
   },
   "order": [
@@ -273,7 +273,7 @@
     "partners_BfCpir",
     "products_b3gb4U",
     "collections_HY8QfE",
-    "newsletter_Ldb8rt",
-    "reviews_jTU6iE"
+    "reviews_jTU6iE",
+    "newsletter_Ldb8rt"
   ]
 }
