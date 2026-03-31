@@ -5,32 +5,161 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
 {% endcomment %}
 
-<h1>{{ 'cart.title' | t }}</h1>
+<section>
+  <div class="container">
+    <h1 class="h3 uppercase mb-3">Your Cart</h1>
 
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td style="width: 150px; height: 150px;">
-          {% if item.image %}
-            {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
-          {% endif %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
+    <div class="grid lg:grid-cols-12 gap-10 mb-20">
+      <div class="lg:col-span-7 w-full">
+        <card-products>
+          {% form 'cart', cart %}
+            <div class="border border-black/10 rounded-[20px] px-6">
+              {% for item in cart.items %}
+                <div class="flex flex-col py-6 border-b border-b-black/10 relative">
+                  <div class="flex gap-4">
+                    <div class="shrink-0">
+                      <a class="inline-flex size-31 bg-black/10 rounded-lg p-2" href="/product">
+                        {% if item.image %}
+                          {{
+                            item.image
+                            | image_url: width: 150, height: 150
+                            | image_tag: class: 'size-full object-contain'
+                          }}
+                        {% endif %}
+                        {% comment %} <img src="images/image-1.png" alt="product" class="size-full object-contain" /> {% endcomment %}
+                      </a>
+                    </div>
+                    <div class="flex flex-col justify-between w-full">
+                      <div class="mb-4">
+                        <a href="/product">
+                          <h3 class="h6 font-bold">{{ item.title }}</h3>
+                        </a>
+                        <div class="flex flex-col gap-1 text-sm">
+                          {% for option in item.options_with_values %}
+                            <div class="">
+                              <span>{{ option.name }}:</span> <span class="text-black/60">{{ option.value }}</span>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="flex gap-2 justify-between w-full">
+                        <h5 class="font-bold">{{ item.price | money }}</h5>
+                        <div class="quantity-component small">
+                          <button>−</button>
+                          <input type="number" value="{{ item.quantity }}">
+                          <button>+</button>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="absolute top-4.5 right-0 text-red-500 cursor-pointer p-2 [&amp;&gt;svg]:size-4.5">
+                      <svg viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.25 3H13.5V2.25C13.5 1.65326 13.2629 1.08097 12.841 0.65901C12.419 0.237053 11.8467 0 11.25 0H6.75C6.15326 0 5.58097 0.237053 5.15901 0.65901C4.73705 1.08097 4.5 1.65326 4.5 2.25V3H0.75C0.551088 3 0.360322 3.07902 0.21967 3.21967C0.0790178 3.36032 0 3.55109 0 3.75C0 3.94891 0.0790178 4.13968 0.21967 4.28033C0.360322 4.42098 0.551088 4.5 0.75 4.5H1.5V18C1.5 18.3978 1.65804 18.7794 1.93934 19.0607C2.22064 19.342 2.60218 19.5 3 19.5H15C15.3978 19.5 15.7794 19.342 16.0607 19.0607C16.342 18.7794 16.5 18.3978 16.5 18V4.5H17.25C17.4489 4.5 17.6397 4.42098 17.7803 4.28033C17.921 4.13968 18 3.94891 18 3.75C18 3.55109 17.921 3.36032 17.7803 3.21967C17.6397 3.07902 17.4489 3 17.25 3ZM7.5 14.25C7.5 14.4489 7.42098 14.6397 7.28033 14.7803C7.13968 14.921 6.94891 15 6.75 15C6.55109 15 6.36032 14.921 6.21967 14.7803C6.07902 14.6397 6 14.4489 6 14.25V8.25C6 8.05109 6.07902 7.86032 6.21967 7.71967C6.36032 7.57902 6.55109 7.5 6.75 7.5C6.94891 7.5 7.13968 7.57902 7.28033 7.71967C7.42098 7.86032 7.5 8.05109 7.5 8.25V14.25ZM12 14.25C12 14.4489 11.921 14.6397 11.7803 14.7803C11.6397 14.921 11.4489 15 11.25 15C11.0511 15 10.8603 14.921 10.7197 14.7803C10.579 14.6397 10.5 14.4489 10.5 14.25V8.25C10.5 8.05109 10.579 7.86032 10.7197 7.71967C10.8603 7.57902 11.0511 7.5 11.25 7.5C11.4489 7.5 11.6397 7.57902 11.7803 7.71967C11.921 7.86032 12 8.05109 12 8.25V14.25ZM12 3H6V2.25C6 2.05109 6.07902 1.86032 6.21967 1.71967C6.36032 1.57902 6.55109 1.5 6.75 1.5H11.25C11.4489 1.5 11.6397 1.57902 11.7803 1.71967C11.921 1.86032 12 2.05109 12 2.25V3Z" fill="currentColor"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endform %}
+        </card-products>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="border border-black/10 rounded-[20px] px-6 py-5">
+          <h5 class="font-bold mb-6 leading-none">Order Summary</h5>
+          <div class="mb-6">
+            <div class="flex flex-col gap-4 border-b border-black/10 pb-4 mb-4">
+              <div class="flex justify-between text-xl">
+                <span class="text-black/60">Subtotal</span>
+                <strong>$565</strong>
+              </div>
+              <div class="flex justify-between text-xl">
+                <span class="text-black/60">Discount (-20%)</span>
+                <strong>-$113</strong>
+              </div>
+              <div class="flex justify-between text-xl">
+                <span class="text-black/60">Delivery Fee</span>
+                <strong>-$15</strong>
+              </div>
+            </div>
+            <div class="flex justify-between text-xl">
+              <span>Total</span>
+              <strong>$467</strong>
+            </div>
+          </div>
+          <div class="flex gap-3 relative">
+            <input type="text" class="text-input pl-13" placeholder="Add promo code">
+            <button class="button bg-black text-white w-30 font-regular text-base">Apply</button>
+            <span class="text-black/40 [&amp;&gt;svg]:size-5 absolute top-3.5 left-5">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.0766 12.4856L13.7653 3.17438C13.5917 2.99963 13.3851 2.86109 13.1576 2.76679C12.93 2.67248 12.686 2.62429 12.4397 2.62501H3.75001C3.45164 2.62501 3.16549 2.74353 2.95451 2.95451C2.74353 3.16549 2.62501 3.45164 2.62501 3.75001V12.4397C2.62429 12.686 2.67248 12.93 2.76679 13.1576C2.86109 13.3851 2.99963 13.5917 3.17438 13.7653L12.4856 23.0766C12.8372 23.4281 13.3141 23.6255 13.8113 23.6255C14.3084 23.6255 14.7853 23.4281 15.1369 23.0766L23.0766 15.1369C23.4281 14.7853 23.6255 14.3084 23.6255 13.8113C23.6255 13.3141 23.4281 12.8372 23.0766 12.4856ZM13.8113 21.2203L4.87501 12.2813V4.87501H12.2813L21.2175 13.8113L13.8113 21.2203ZM9.37501 7.87501C9.37501 8.17168 9.28703 8.46169 9.12221 8.70836C8.95739 8.95504 8.72312 9.1473 8.44903 9.26083C8.17494 9.37436 7.87334 9.40406 7.58237 9.34619C7.2914 9.28831 7.02413 9.14545 6.81435 8.93567C6.60457 8.72589 6.46171 8.45861 6.40383 8.16764C6.34595 7.87667 6.37566 7.57507 6.48919 7.30098C6.60272 7.02689 6.79498 6.79263 7.04165 6.6278C7.28833 6.46298 7.57834 6.37501 7.87501 6.37501C8.27283 6.37501 8.65436 6.53304 8.93567 6.81435C9.21697 7.09565 9.37501 7.47718 9.37501 7.87501Z" fill="currentColor"></path>
+              </svg>
+            </span>
+          </div>
+          <div>
+            <button class="button flex gap-4 text-white w-full mt-6">
+              <span>Go to Checkout</span>
+              <svg class="size-5" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11.6709 0.331972L18.4209 7.08197C18.5258 7.18649 18.609 7.31068 18.6658 7.44743C18.7226 7.58417 18.7518 7.73078 18.7518 7.87885C18.7518 8.02691 18.7226 8.17352 18.6658 8.31027C18.609 8.44701 18.5258 8.57121 18.4209 8.67572L11.6709 15.4257C11.4596 15.6371 11.1729 15.7558 10.8741 15.7558C10.5752 15.7558 10.2885 15.6371 10.0772 15.4257C9.86584 15.2144 9.74711 14.9277 9.74711 14.6288C9.74711 14.33 9.86584 14.0433 10.0772 13.832L14.9063 9.00291L1.125 9.00291C0.826632 9.00291 0.540483 8.88438 0.329505 8.6734C0.118527 8.46243 9.03849e-08 8.17628 9.39429e-08 7.87791C9.75009e-08 7.57954 0.118527 7.29339 0.329505 7.08241C0.540483 6.87144 0.826632 6.75291 1.125 6.75291L14.9063 6.75291L10.0763 1.92385C9.86491 1.7125 9.74617 1.42586 9.74617 1.12697C9.74617 0.828087 9.86491 0.541443 10.0763 0.330098C10.2876 0.118754 10.5742 1.91996e-05 10.8731 1.92031e-05C11.172 1.92067e-05 11.4587 0.118754 11.67 0.330098L11.6709 0.331972Z" fill="currentColor"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section>
+  <div class="container">
+    <card-products>
+      {% form 'cart', cart %}
+        {% for item in cart.items %}
+          <card-product>
+            <div class="w-20">
+              {% if item.image %}
+                {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
+              {% endif %}
+            </div>
+            <div class="card-product-content">
+              <p>{{ item.product.title }}</p>
+              {{ 'cart.remove' | t | link_to: item.url_to_remove }}
+            </div>
+            <div class="card-product-quantity">
+              <input type="text" name="updates[]" value="{{ item.quantity }}">
+              <input type="submit" value="{{ 'cart.update' | t }}">
+            </div>
+          </card-product>
+        {% endfor %}
+      {% endform %}
+    </card-products>
+  </div>
+</section>
+{% comment %}
+  <h1>{{ 'cart.title' | t }}</h1>
 
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
+  <form action="{{ routes.cart_url }}" method="post">
+    <table>
+      {% for item in cart.items %}
+        <tr>
+          <td style="width: 150px; height: 150px;">
+            {% if item.image %}
+              {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
+            {% endif %}
+          </td>
+          <td>
+            <p>{{ item.product.title }}</p>
+            {{ 'cart.remove' | t | link_to: item.url_to_remove }}
+          </td>
+          <td>
+            <input type="text" name="updates[]" value="{{ item.quantity }}">
+            <input type="submit" value="{{ 'cart.update' | t }}">
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
 
+    <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
+  </form>
+{% endcomment %}
 {% schema %}
 {
   "name": "t:general.cart",

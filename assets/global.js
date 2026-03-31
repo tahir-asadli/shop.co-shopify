@@ -65,6 +65,13 @@ class ProductForm extends HTMLElement {
     this.quantityInput = this.form.querySelector(
       "input[name='quantity']"
     );
+    this.productIdInput = this.form.querySelector(
+      "input[name='id']"
+    );
+    this.variantIdInput = this.form.querySelector(
+      "input[name='variant-id']"
+    );
+
     this.minusButton = this.querySelector("[data-quantity-minus]");
     this.plusButton = this.querySelector("[data-quantity-plus]");
   }
@@ -109,15 +116,29 @@ class ProductForm extends HTMLElement {
   }
 
   handleSubmit(event) {
+    console.log('handleSubmit');
     event.preventDefault();
     this.fieldset.disabled = true;
-    const url = this.form.action;
-    const formData = new FormData(this.form);
+    const url = '/cart/add.js';
+    const formData = {
+      quantity: this.quantityInput.value,
+      id: this.variantIdInput.value
+    }
     fetch(url, {
       method: 'POST',
-      body: formData,
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(data => {
+            throw new Error(data.description || 'Could not add item to cart');
+          });
+        }
+        return res.json();
+      })
       .then(data => {
         console.log('Added to cart!', data);
         // Optionally, you can update the cart UI here or show a success message.
