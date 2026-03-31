@@ -545,9 +545,6 @@
   .w-50 {
     width: calc(var(--spacing) * 50);
   }
-  .w-150 {
-    width: calc(var(--spacing) * 150);
-  }
   .w-full {
     width: 100%;
   }
@@ -1116,6 +1113,11 @@
   .hover\:text-white {
     &:hover {
       color: var(--color-white);
+    }
+  }
+  .hover\:underline {
+    &:hover {
+      text-decoration-line: underline;
     }
   }
   .in-\[\.mobile-menu-open\]\:-top-0\.25 {
@@ -2296,6 +2298,18 @@
     & svg {
       width: calc(var(--spacing) * 3);
       height: calc(var(--spacing) * 3);
+    }
+  }
+  .\[\&_svg\]\:size-4\.5 {
+    & svg {
+      width: calc(var(--spacing) * 4.5);
+      height: calc(var(--spacing) * 4.5);
+    }
+  }
+  .\[\&_svg\]\:size-5 {
+    & svg {
+      width: calc(var(--spacing) * 5);
+      height: calc(var(--spacing) * 5);
     }
   }
   .\[\&_svg\]\:h-auto {
