@@ -153,60 +153,6 @@
     {% endif %}
   </div>
 </section>
-{% comment %}
-  <section>
-    <div class="container">
-      <card-products>
-        {% form 'cart', cart %}
-          {% for item in cart.items %}
-            <card-product>
-              <div class="w-20">
-                {% if item.image %}
-                  {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
-                {% endif %}
-              </div>
-              <div class="card-product-content">
-                <p>{{ item.product.title }}</p>
-                {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-              </div>
-              <div class="card-product-quantity">
-                <input type="text" name="updates[]" value="{{ item.quantity }}">
-                <input type="submit" value="{{ 'cart.update' | t }}">
-              </div>
-            </card-product>
-          {% endfor %}
-        {% endform %}
-      </card-products>
-    </div>
-  </section>
-{% endcomment %}
-{% comment %}
-  <h1>{{ 'cart.title' | t }}</h1>
-
-  <form action="{{ routes.cart_url }}" method="post">
-    <table>
-      {% for item in cart.items %}
-        <tr>
-          <td style="width: 150px; height: 150px;">
-            {% if item.image %}
-              {% render 'image', image: item.image, url: item.url, width: 150, height: 150 %}
-            {% endif %}
-          </td>
-          <td>
-            <p>{{ item.product.title }}</p>
-            {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-          </td>
-          <td>
-            <input type="text" name="updates[]" value="{{ item.quantity }}">
-            <input type="submit" value="{{ 'cart.update' | t }}">
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-
-    <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-  </form>
-{% endcomment %}
 {% schema %}
 {
   "name": "t:general.cart",

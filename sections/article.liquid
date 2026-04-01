@@ -12,7 +12,7 @@
       {% if article.image %}
         {{
           article.image
-          | image_url: height: 500, crop: 'center'
+          | image_url: width: 1200, crop: 'top'
           | image_tag: class: 'w-full h-100 my-4 object-cover rounded-lg object-top'
         }}
       {% endif %}

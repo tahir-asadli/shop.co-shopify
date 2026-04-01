@@ -692,3 +692,84 @@ class MessageNotification extends HTMLElement {
   }
 }
 customElements.define('message-notification', MessageNotification);
+
+class FilterAccordion extends HTMLElement {
+  constructor() {
+    super();
+    this.summary = this.querySelector('.filter-accordion-header');
+    this.content = this.querySelector('.filter-accordion-content');
+    this.handleSummaryClick = this.handleSummaryClick.bind(this);
+  }
+
+  connectedCallback() {
+    if (this.summary) {
+      this.summary.addEventListener('click', this.handleSummaryClick);
+    }
+  }
+
+  disconnectedCallback() {
+    if (this.summary) {
+      this.summary.removeEventListener('click', this.handleSummaryClick);
+    }
+  }
+
+  handleSummaryClick(event) {
+    event.preventDefault();
+    const isOpen = this.classList.contains('accordion-open');
+    if (isOpen) {
+      this.classList.remove('accordion-open');
+      this.content.style.height = '0';
+    } else {
+      const contentHeight = this.content.scrollHeight;
+      this.content.style.height = contentHeight + 'px';
+      this.classList.add('accordion-open');
+    }
+  }
+}
+customElements.define('filter-accordion', FilterAccordion);
+
+class CollectionFilters extends HTMLElement {
+  constructor() {
+    super();
+    this.filterAccordions = this.querySelectorAll('filter-accordion');
+  }
+
+  connectedCallback() {
+    this.sectionId = this.dataset.sectionId;
+    const filterInputs = this.querySelectorAll('input[type="checkbox"]');
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    filterInputs.forEach(input => {
+      input.addEventListener('change', this.handleFilterChange);
+    });
+
+  }
+  disconnectedCallback() {
+    const filterInputs = this.querySelectorAll('input[type="checkbox"]');
+    filterInputs.forEach(input => {
+      input.removeEventListener('change', this.handleFilterChange);
+    });
+  }
+
+  handleFilterChange(event) {
+    const input = event.currentTarget;
+    // (`#shopify-section-${this.sectionId}`);
+    const url = new URL(input.checked ? input.dataset.addUrl : input.dataset.removeUrl, window.location.origin);
+    url.searchParams.set('section_id', this.sectionId);
+    fetch(url.toString())
+      .then(response => response.text())
+      .then(html => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
+        const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
+        if (newSection && currentSection) {
+          currentSection.replaceWith(newSection);
+        }
+      })
+      .catch(error => console.error('Error fetching filter results:', error));
+
+    console.log(url.toString());
+  }
+
+}
+customElements.define('collection-filters', CollectionFilters);
