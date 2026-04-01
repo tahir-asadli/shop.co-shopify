@@ -584,6 +584,31 @@ class CartProductItem extends HTMLElement {
     // Implement remove from cart functionality here
   }
 }
+
+class NotificationMessage extends HTMLElement {
+  constructor() {
+    super();
+    this.closeButton = this.querySelector('.notification-close');
+    this.handleCloseClick = this.handleCloseClick.bind(this);
+  }
+
+  connectedCallback() {
+    if (this.closeButton) {
+      this.closeButton.addEventListener('click', this.handleCloseClick);
+    }
+  }
+
+  disconnectedCallback() {
+    if (this.closeButton) {
+      this.closeButton.removeEventListener('click', this.handleCloseClick);
+    }
+  }
+
+  handleCloseClick() {
+    this.remove();
+  }
+}
+customElements.define('notification-message', NotificationMessage);
 customElements.define('cart-product-item', CartProductItem);
 
 // Add to cart
