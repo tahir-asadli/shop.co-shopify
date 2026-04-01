@@ -116,7 +116,6 @@ class ProductForm extends HTMLElement {
   }
 
   handleSubmit(event) {
-    console.log('handleSubmit');
     event.preventDefault();
     this.fieldset.disabled = true;
     const url = '/cart/add.js';
@@ -453,6 +452,139 @@ class ProductDialog extends HTMLElement {
 }
 customElements.define('product-dialog', ProductDialog);
 
+class ProductCart extends HTMLElement {
+  constructor() {
+    super();
+    this.form = this.querySelector('form');
+    this.formFieldset = this.form.querySelector('fieldset');
+    this.quantityInputs = this.querySelectorAll("[data-quantity-input]");
+    this.sectionId = this.dataset.sectionId;
+    console.log('this.sectionId', this.sectionId);
+
+  }
+
+  connectedCallback() {
+    console.log(this.quantityInputs, this.form);
+    this.form.addEventListener('submit', this.handleSubmit.bind(this));
+
+    console.log('ProductCart');
+  }
+  disconnectedCallback() {
+    this.form.removeEventListener('submit', this.handleSubmit.bind(this));
+  }
+
+  updateCartSection() {
+    const url = `${window.location.origin}/cart?section_id=${this.sectionId}`;
+    fetch(url)
+      .then(res => {
+        if (!res.ok) {
+          this.formFieldset.disabled = false;
+          throw new Error('Failed to fetch cart section');
+        }
+        return res.text();
+      })
+      .then(html => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        console.log(`#shopify-section-${this.sectionId}`);
+
+        const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
+        const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
+        if (newSection && currentSection) {
+          currentSection.replaceWith(newSection);
+        }
+        this.formFieldset.disabled = false;
+      })
+      .catch(err => {
+        console.error('Error fetching cart section:', err);
+        this.formFieldset.disabled = false;
+      });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(this.form);
+    console.log('formData', formData);
+    this.formFieldset.disabled = true;
+    fetch('/cart/update.js', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(res => {
+        if (!res.ok) {
+          this.formFieldset.disabled = false;
+          return res.json().then(data => {
+            throw new Error(data.description || 'Could not update cart');
+          });
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log('Cart updated!', data);
+        this.updateCartSection();
+      })
+      .catch(err => {
+        console.error('Error updating cart:', err);
+        this.formFieldset.disabled = false;
+      });
+  }
+}
+customElements.define('product-cart', ProductCart);
+
+class CartProductItem extends HTMLElement {
+  constructor() {
+    super();
+
+    this.quantityInput = this.querySelector("[data-quantity-input]");
+    this.minusButton = this.querySelector("[data-quantity-minus]");
+    this.plusButton = this.querySelector("[data-quantity-plus]");
+    this.removeButton = this.querySelector("[data-remove-item]");
+    console.log('this.quantityInput', this.quantityInput);
+    console.log('this.minusButton', this.minusButton);
+    console.log('this.plusButton', this.plusButton);
+    console.log('this.removeButton', this.removeButton);
+  }
+
+  connectedCallback() {
+    console.log('CartProductItem');
+
+    this.minusButton.addEventListener('click', this.handleMinusClick.bind(this));
+    this.plusButton.addEventListener('click', this.handlePlusClick.bind(this));
+    this.removeButton.addEventListener('click', this.handleRemoveClick.bind(this));
+
+  }
+  disconnectedCallback() {
+    this.minusButton.removeEventListener('click', this.handleMinusClick);
+    this.plusButton.removeEventListener('click', this.handlePlusClick);
+    this.removeButton.removeEventListener('click', this.handleRemoveClick);
+  }
+
+
+  handleMinusClick() {
+    console.log('handleMinusClick');
+
+    if (parseInt(this.quantityInput.value) === 1) {
+      return;
+    }
+    this.quantityInput.value = parseInt(this.quantityInput.value) - 1;
+  }
+
+  handlePlusClick() {
+    console.log('handlePlusClick');
+
+    const maxQuantity = parseInt(this.quantityInput.getAttribute('max'));
+    if (parseInt(this.quantityInput.value) === maxQuantity) {
+      return;
+    }
+    this.quantityInput.value = parseInt(this.quantityInput.value) + 1;
+  }
+
+  handleRemoveClick() {
+    console.log('handleRemoveClick');
+    // Implement remove from cart functionality here
+  }
+}
+customElements.define('cart-product-item', CartProductItem);
 
 // Add to cart
 document.addEventListener("DOMContentLoaded", function () {
@@ -484,30 +616,30 @@ document.addEventListener("DOMContentLoaded", function () {
   //   });
   // });
 
-  async function addToCart(variantId, quantity = 1) {
-    const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        items: [
-          {
-            id: variantId,       // variant ID (not product ID)
-            quantity: quantity,
-          }
-        ]
-      })
-    });
+  // async function addToCart(variantId, quantity = 1) {
+  //   const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       items: [
+  //         {
+  //           id: variantId,       // variant ID (not product ID)
+  //           quantity: quantity,
+  //         }
+  //       ]
+  //     })
+  //   });
 
-    const data = await response.json();
+  //   const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.description || 'Could not add item to cart');
-    }
+  //   if (!response.ok) {
+  //     throw new Error(data.description || 'Could not add item to cart');
+  //   }
 
-    return data;
-  }
+  //   return data;
+  // }
   // async function fetchProduct(handle) {
   //   const res = await fetch(`/products/${handle}.js`);
   //   return await res.json();

@@ -135,7 +135,9 @@
                     name="quantity"
                     value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
                     min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-                    max="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+                    {% if product.selected_or_first_available_variant.quantity_rule.max %}
+                      max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                    {% endif %}
                     data-quantity-display
                   >
                   <button data-quantity-plus type="button">+</button>

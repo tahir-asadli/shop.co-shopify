@@ -94,6 +94,10 @@
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(4px); /* Applies a blur effect to the background */
   }
+
+  form fieldset:disabled {
+    @apply opacity-30 cursor-not-allowed;
+  }
 }
 
 @layer components {
