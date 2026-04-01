@@ -1,0 +1,46 @@
+{%- unless template == 'index' or template == 'list-collections' or template == '404' -%}
+  {%- assign t = template | split: '.' | first -%}
+  <!-- Breadcrumb -->
+  <section>
+    <div class="container">
+      <div class="flex gap-2 items-center text-black-60 [&>a,&>svg]:text-black/60 [&>a:hover]:text-amber-600 py-2 my-2">
+        <a href="{{ routes.root_url }}">Home</a>
+        {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
+        {%- case t -%}
+          {%- when 'page' -%}
+            <a href="{{ page.url }}" class="text-black!">{{ page.title }}</a>
+          {%- when 'product' -%}
+            {%- if collection.url -%}
+              <a href="{{ collection.url }}" class="text-black!">{{ collection.title }}</a>
+              {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
+            {%- endif -%}
+            <a href="{{ product.url }}" class="text-black!">{{ product.title }}</a>
+          {%- when 'collection' and collection.handle -%}
+            {%- if current_tags -%}
+              <a href="{{ collection.url }}" class="text-black!">{{ collection.title }}</a>
+              {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
+              {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+              <a href="{{ tag_url }}" class="text-black!">{{ current_tags | join: ' + ' }}</a>
+            {%- else -%}
+              <a href="{{ collection.url }}" class="text-black!">{{ collection.title }}</a>
+            {%- endif -%}
+          {%- when 'blog' -%}
+            {%- if current_tags -%}
+              <a href="{{ blog.url }}" class="text-black!">{{ blog.title }}</a>
+              {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
+              {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+              <a href="{{ tag_url }}" class="text-black!">{{ current_tags | join: ' + ' }}</a>
+            {%- else -%}
+              <a href="{{ blog.url }}" class="text-black!">{{ blog.title }}</a>
+            {%- endif -%}
+          {%- when 'article' -%}
+            <a href="{{ blog.url }}" class="text-black!">{{ blog.title }}</a>
+            {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
+            <a href="{{ article.url }}" class="text-black!">{{ article.title }}</a>
+          {%- else -%}
+            <a href="{{ request.path }}" class="text-black!">{{ page_title }}</a>
+        {%- endcase -%}
+      </div>
+    </div>
+  </section>
+{%- endunless -%}
