@@ -77,8 +77,6 @@ class ProductForm extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log('ProductForm connected');
-
     this.form.addEventListener('submit', this.handleSubmit.bind(this));
 
     this.handleMinusClick = this.handleMinusClick.bind(this);
@@ -90,15 +88,12 @@ class ProductForm extends HTMLElement {
   }
 
   disconnectedCallback() {
-    console.log('ProductForm disconnected');
     this.form.removeEventListener('submit', this.handleSubmit.bind(this));
     this.minusButton.removeEventListener("click", this.handleMinusClick);
     this.plusButton.removeEventListener("click", this.handlePlusClick);
   }
 
   handleMinusClick() {
-    console.log('handleMinusClick');
-
     if (parseInt(this.quantityInput.value) === 1) {
       return;
     }
@@ -106,8 +101,6 @@ class ProductForm extends HTMLElement {
   }
 
   handlePlusClick() {
-    console.log('handlePlusClick');
-
     const maxQuantity = parseInt(this.quantityInput.getAttribute('max'));
     if (parseInt(this.quantityInput.value) === maxQuantity) {
       return;
@@ -139,11 +132,28 @@ class ProductForm extends HTMLElement {
         return res.json();
       })
       .then(data => {
-        console.log('Added to cart!', data);
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'success',
+            message: 'Added to cart!',
+          }, bubbles: true
+        }));
         // Optionally, you can update the cart UI here or show a success message.
       })
-      .catch(err => console.error('Error adding to cart:', err))
+      .catch(err => {
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'error',
+            message: 'Error adding to cart!',
+          }, bubbles: true
+        }));
+        console.error('Error adding to cart:', err);
+      })
       .finally(() => {
+
+        document.body.dispatchEvent(new CustomEvent('product-dialog-close', {
+          bubbles: true
+        }));
         this.fieldset.disabled = false;
       });
   }
@@ -363,7 +373,6 @@ class ProductCard extends HTMLElement {
   constructor() {
     super();
     this.productId = this.dataset.productId;
-
     this.productHandle = this.dataset.productHandle;
     this.chooseOptionsButtons = this.querySelectorAll('.choose-options');
     this.addToCartButtons = this.querySelectorAll('.add-to-cart');
@@ -400,7 +409,50 @@ class ProductCard extends HTMLElement {
 
   handleAddToCartClick(event) {
     const button = event.currentTarget;
-    const variantId = button.dataset.productId;
+    button.disabled = true;
+    fetch('/cart/add.js', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: this.productId,
+        quantity: 1
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(data => {
+            document.dispatchEvent(new CustomEvent('show-notification', {
+              detail: {
+                type: 'error',
+                message: 'Could not add item to cart!',
+              }, bubbles: true
+            }));
+            throw new Error(data.description || 'Could not add item to cart');
+          });
+        }
+        return res.json();
+      })
+      .then(data => {
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'success',
+            message: 'Added to cart!',
+          }, bubbles: true
+        }));
+      })
+      .catch(err => {
+        console.error('Error adding to cart:', err);
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'error',
+            message: 'Error adding to cart: ' + err.message,
+          }, bubbles: true
+        }));
+      }).finally(() => {
+        button.disabled = false;
+      });
   }
 
 }
@@ -421,22 +473,32 @@ class ProductDialog extends HTMLElement {
     document.body.addEventListener('product-dialog-open', (event) => {
       const url = `/products/${event.detail.productHandle}?product_id=${event.detail.productId}`;
       fetch(url)
-        .then(res => res.text())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch product dialog content');
+          }
+          return res.text();
+        })
         .then(html => {
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = html;
           const productForm = tempDiv.querySelector('#main-product');
-          console.log('productForm', productForm);
-
           if (productForm) {
             this.dialog.querySelector('.dialog-content').innerHTML = productForm.outerHTML;
+            this.dialog.showModal();
           }
         })
-        .catch(err => console.error('Error fetching product dialog content:', err));
-      this.dialog.showModal();
+        .catch(err => {
+          console.error('Error fetching product dialog content:', err);
+          document.dispatchEvent(new CustomEvent('show-notification', {
+            detail: {
+              type: 'error',
+              message: 'Error loading product details!',
+            }, bubbles: true
+          }));
+        });
     });
     document.body.addEventListener('product-dialog-close', () => {
-      console.log('Dialog closed');
       this.dialog.close();
     });
 
@@ -459,15 +521,10 @@ class ProductCart extends HTMLElement {
     this.formFieldset = this.form.querySelector('fieldset');
     this.quantityInputs = this.querySelectorAll("[data-quantity-input]");
     this.sectionId = this.dataset.sectionId;
-    console.log('this.sectionId', this.sectionId);
-
   }
 
   connectedCallback() {
-    console.log(this.quantityInputs, this.form);
     this.form.addEventListener('submit', this.handleSubmit.bind(this));
-
-    console.log('ProductCart');
   }
   disconnectedCallback() {
     this.form.removeEventListener('submit', this.handleSubmit.bind(this));
@@ -478,7 +535,6 @@ class ProductCart extends HTMLElement {
     fetch(url)
       .then(res => {
         if (!res.ok) {
-          this.formFieldset.disabled = false;
           throw new Error('Failed to fetch cart section');
         }
         return res.text();
@@ -486,12 +542,16 @@ class ProductCart extends HTMLElement {
       .then(html => {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
-        console.log(`#shopify-section-${this.sectionId}`);
-
         const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
         const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
         if (newSection && currentSection) {
           currentSection.replaceWith(newSection);
+          document.dispatchEvent(new CustomEvent('show-notification', {
+            detail: {
+              type: 'success',
+              message: 'Cart updated!',
+            }, bubbles: true
+          }));
         }
         this.formFieldset.disabled = false;
       })
@@ -504,7 +564,6 @@ class ProductCart extends HTMLElement {
   handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(this.form);
-    console.log('formData', formData);
     this.formFieldset.disabled = true;
     fetch('/cart/update.js', {
       method: 'POST',
@@ -512,7 +571,6 @@ class ProductCart extends HTMLElement {
     })
       .then(res => {
         if (!res.ok) {
-          this.formFieldset.disabled = false;
           return res.json().then(data => {
             throw new Error(data.description || 'Could not update cart');
           });
@@ -520,7 +578,6 @@ class ProductCart extends HTMLElement {
         return res.json();
       })
       .then(data => {
-        console.log('Cart updated!', data);
         this.updateCartSection();
       })
       .catch(err => {
@@ -539,15 +596,9 @@ class CartProductItem extends HTMLElement {
     this.minusButton = this.querySelector("[data-quantity-minus]");
     this.plusButton = this.querySelector("[data-quantity-plus]");
     this.removeButton = this.querySelector("[data-remove-item]");
-    console.log('this.quantityInput', this.quantityInput);
-    console.log('this.minusButton', this.minusButton);
-    console.log('this.plusButton', this.plusButton);
-    console.log('this.removeButton', this.removeButton);
   }
 
   connectedCallback() {
-    console.log('CartProductItem');
-
     this.minusButton.addEventListener('click', this.handleMinusClick.bind(this));
     this.plusButton.addEventListener('click', this.handlePlusClick.bind(this));
     this.removeButton.addEventListener('click', this.handleRemoveClick.bind(this));
@@ -561,8 +612,6 @@ class CartProductItem extends HTMLElement {
 
 
   handleMinusClick() {
-    console.log('handleMinusClick');
-
     if (parseInt(this.quantityInput.value) === 1) {
       return;
     }
@@ -570,8 +619,6 @@ class CartProductItem extends HTMLElement {
   }
 
   handlePlusClick() {
-    console.log('handlePlusClick');
-
     const maxQuantity = parseInt(this.quantityInput.getAttribute('max'));
     if (parseInt(this.quantityInput.value) === maxQuantity) {
       return;
@@ -580,22 +627,58 @@ class CartProductItem extends HTMLElement {
   }
 
   handleRemoveClick() {
-    console.log('handleRemoveClick');
     // Implement remove from cart functionality here
   }
 }
+customElements.define('cart-product-item', CartProductItem);
 
-class NotificationMessage extends HTMLElement {
+class ShopNotifications extends HTMLElement {
   constructor() {
     super();
-    this.closeButton = this.querySelector('.notification-close');
+    this.messages = this.querySelector('.messages');
+  }
+
+  connectedCallback() {
+    document.addEventListener('show-notification', (event) => {
+      const messageTemplate = `<message-notification class="message relative bg-{{ color }}-200 h-0 rounded-2xl transition-all duration-100 ease-in-out opacity-0 animate-fade-in [&.visible]:opacity-100">
+            <div class="message-text p-4">{{ text }}</div>
+            <button class="message-close absolute top-0.5 right-2">&times;</button>
+          </message-notification>`
+      const messageHTML = messageTemplate.replace('{{ text }}', event.detail?.message).replace('{{ color }}', event.detail?.type === 'success' ? 'green' : 'red');
+      this.messages.insertAdjacentHTML('beforeend', messageHTML);
+    });
+  }
+
+  disconnectedCallback() {
+  }
+}
+customElements.define('shop-notifications', ShopNotifications);
+
+class MessageNotification extends HTMLElement {
+  constructor() {
+    super();
+    this.closeButton = this.querySelector('.message-close');
     this.handleCloseClick = this.handleCloseClick.bind(this);
   }
 
   connectedCallback() {
+    setTimeout(() => {
+      this.classList.add('visible');
+      const contentHeight = this.scrollHeight;
+      this.style.height = contentHeight + 'px';
+      this.classList.add('visible');
+    }, 10);
     if (this.closeButton) {
       this.closeButton.addEventListener('click', this.handleCloseClick);
     }
+
+    setTimeout(() => {
+      this.classList.remove('visible');
+      this.style.height = '0';
+      setTimeout(() => {
+        this.remove();
+      }, 300);
+    }, 5000);
   }
 
   disconnectedCallback() {
@@ -608,83 +691,4 @@ class NotificationMessage extends HTMLElement {
     this.remove();
   }
 }
-customElements.define('notification-message', NotificationMessage);
-customElements.define('cart-product-item', CartProductItem);
-
-// Add to cart
-document.addEventListener("DOMContentLoaded", function () {
-
-  // const dialog = document.querySelector('#product-dialog');
-  // const closeButton = dialog.querySelector('#close-dialog');
-
-  // closeButton.addEventListener('click', () => {
-  //   dialog.close();
-  // });
-
-  // const addToCartButtons = document.querySelectorAll('.add-to-cart');
-  // const chooseOptionsButtons = document.querySelectorAll('.choose-options');
-  // addToCartButtons.forEach(button => {
-  //   button.addEventListener('click', () => {
-  //     const productId = button.getAttribute('data-product-id');
-  //     addToCart(productId, 1)
-  //       .then(cart => console.log('Added!', cart))
-  //       .catch(err => console.error(err));
-  //   });
-  // });
-
-  // chooseOptionsButtons.forEach(button => {
-  //   button.addEventListener('click', async () => {
-  //     const handle = button.dataset.productHandle;
-  //     const product = await fetchProduct(handle);
-
-  //     openDialog(product);
-  //   });
-  // });
-
-  // async function addToCart(variantId, quantity = 1) {
-  //   const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       items: [
-  //         {
-  //           id: variantId,       // variant ID (not product ID)
-  //           quantity: quantity,
-  //         }
-  //       ]
-  //     })
-  //   });
-
-  //   const data = await response.json();
-
-  //   if (!response.ok) {
-  //     throw new Error(data.description || 'Could not add item to cart');
-  //   }
-
-  //   return data;
-  // }
-  // async function fetchProduct(handle) {
-  //   const res = await fetch(`/products/${handle}.js`);
-  //   return await res.json();
-  // }
-
-  function openDialog() {
-    // product
-    // const dialog = document.querySelector('#product-dialog');
-    // dialog.querySelector('h2').textContent = product.title;
-    // dialog.querySelector('p').textContent = product.description;
-    dialog.showModal();
-  }
-
-
-
-
-
-
-
-
-
-
-});
+customElements.define('message-notification', MessageNotification);
