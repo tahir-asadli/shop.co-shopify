@@ -4,28 +4,39 @@
 
   https://shopify.dev/docs/storefronts/themes/architecture/templates/blog
 {% endcomment %}
+<section>
+  <div class="container pb-50">
+    <h1>{{ blog.title }}</h1>
+    <div class="py-3">
+      {% paginate blog.articles by 4 %}
+        <div class="grid gap-6 grid-cols-2 md:grid-cols-3">
+          {% for article in blog.articles %}
+            <div class="border border-gray-200 rounded-lg hover:shadow-lg transition-shadow flex flex-col overflow-hidden">
+              {% if article.image %}
+                {{ article.image | image_url: width: 1000 | image_tag | link_to: article.url }}
+              {% endif %}
+              {% assign date = article.published_at | time_tag: format: 'date' %}
+              <div class="p-4 flex gap-2 flex-col justify-between h-full">
+                <h2 class="text-base md:h6 md:leading-6 font-bold">
+                  {{ article.title | link_to: article.url }}
+                </h2>
+                <p class="mt-auto text-gray-600 text-sm md:text-base">
+                  {{ 'blog.article_metadata_html' | t: date: date, author: article.author }}
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
 
-<h1>{{ blog.title }}</h1>
-
-{% paginate blog.articles by 5 %}
-  {% for article in blog.articles %}
-    <div>
-      {% if article.image %}
-        {{ article.image | image_url: width: 1000 | image_tag }}
-      {% endif %}
-      <h2>
-        {{ article.title | link_to: article.url }}
-      </h2>
-      {% assign date = article.published_at | time_tag: format: 'date' %}
-      <p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
-      <p>{{ article.excerpt }}</p>
+        {%- if paginate.pages > 1 -%}
+          <div class="pagination">
+            {{- paginate | default_pagination -}}
+          </div>
+        {%- endif -%}
+      {% endpaginate %}
     </div>
-  {% endfor %}
-
-  {%- if paginate.pages > 1 -%}
-    {{- paginate | default_pagination -}}
-  {%- endif -%}
-{% endpaginate %}
+  </div>
+</section>
 
 {% schema %}
 {
