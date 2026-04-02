@@ -18,9 +18,9 @@
               </h6>
             </div>
             <collection-filters data-collection-handle="{{ collection.handle }}" data-section-id="{{ section.id }}">
-              <div>
+              <fieldset>
                 {% for filter in collection.filters %}
-                  <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion accordion-open">
+                  <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion {% if filter.active_values.size > 0 %}accordion-open{% endif %}">
                     <h6
                       href="{{ filter.url }}"
                       class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header"
@@ -31,35 +31,42 @@
                         class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
                       %}
                     </h6>
-                    <div class="overflow-hidden filter-accordion-content">
-                      <div class="pt-5">
+                    <div class="overflow-hidden filter-accordion-content {% if filter.active_values.size == 0 %}h-0{% endif %}">
+                      <div class="pt-5 flex flex-wrap gap-2">
                         {% if filter.type == 'list' or filter.type == 'boolean' %}
                           {% for value in filter.values %}
-                            <div>
-                              <input
-                                name="filter-{{ filter.label|handleize }}"
-                                data-add-url="{{ value.url_to_add }}"
-                                data-remove-url="{{ value.url_to_remove }}"
-                                {% if value.active %}
-                                  checked
-                                {% endif %}
-                                id="filter-{{ filter.label|handleize }}-{{ value.label|handleize }}"
-                                type="checkbox"
-                              >
-                              <label for="filter-{{ filter.label|handleize }}-{{ value.label|handleize }}">
-                                {{- value.label -}}
-                              </label>
+                            <div class="variants-{{ filter.label | handleize }}">
+                              <div class="radio-button small">
+                                <input
+                                  name="{{ value.param_name }}"
+                                  data-add-url="{{ value.url_to_add }}"
+                                  data-remove-url="{{ value.url_to_remove }}"
+                                  value="{{ value.value }}"
+                                  {% if value.active %}
+                                    checked
+                                  {% endif %}
+                                  id="filter-{{ filter.label|handleize }}-{{ value.label|handleize }}"
+                                  type="checkbox"
+                                >
+                                <label
+                                  {% if filter.presentation == 'swatch' %}
+                                    style="background-color: {{ value.swatch.color }};"
+                                  {% endif %}
+                                  for="filter-{{ filter.label|handleize }}-{{ value.label|handleize }}"
+                                >
+                                  {{- value.label -}}
+                                </label>
+                              </div>
                             </div>
                           {% endfor %}
                         {% else %}
 
                         {% endif %}
-                        Filter content{{ filter.type }}
                       </div>
                     </div>
                   </filter-accordion>
                 {% endfor %}
-              </div>
+              </fieldset>
             </collection-filters>
             <div class="border-b border-b-black/10 pb-6 mb-6">
               <ul class=" flex flex-col gap-2">

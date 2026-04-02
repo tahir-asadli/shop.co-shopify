@@ -139,6 +139,10 @@
     @apply inline-flex justify-center items-center size-9.25 rounded-full cursor-pointer text-[0px] p-0 relative overflow-hidden bg-gray-900;
   }
 
+  .radio-button.small label {
+    @apply pt-1.5 pb-2.25 px-4 text-sm leading-none;
+  }
+
   .variants-color .radio-button input + label::before {
     content: '';
     mask-repeat: no-repeat;

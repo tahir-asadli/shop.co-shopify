@@ -736,9 +736,12 @@ class CollectionFilters extends HTMLElement {
 
   connectedCallback() {
     this.sectionId = this.dataset.sectionId;
-    const filterInputs = this.querySelectorAll('input[type="checkbox"]');
+    this.fieldset = this.querySelector('fieldset');
+    this.filterInputs = this.querySelectorAll('input[type="checkbox"]');
     this.handleFilterChange = this.handleFilterChange.bind(this);
-    filterInputs.forEach(input => {
+    this.generateUrl = this.generateUrl.bind(this);
+    this.timeoutId = null;
+    this.filterInputs.forEach(input => {
       input.addEventListener('change', this.handleFilterChange);
     });
 
@@ -750,25 +753,54 @@ class CollectionFilters extends HTMLElement {
     });
   }
 
-  handleFilterChange(event) {
-    const input = event.currentTarget;
-    // (`#shopify-section-${this.sectionId}`);
-    const url = new URL(input.checked ? input.dataset.addUrl : input.dataset.removeUrl, window.location.origin);
-    url.searchParams.set('section_id', this.sectionId);
-    fetch(url.toString())
-      .then(response => response.text())
-      .then(html => {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
-        const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
-        if (newSection && currentSection) {
-          currentSection.replaceWith(newSection);
-        }
-      })
-      .catch(error => console.error('Error fetching filter results:', error));
+  generateUrl() {
+    const params = {};
 
-    console.log(url.toString());
+    this.filterInputs.forEach(input => {
+      if (input.checked) {
+        if (!params[input.name]) {
+          params[input.name] = [];
+        }
+        params[input.name].push(input.value);
+      }
+    });
+    const url = new URL(window.location.origin + window.location.pathname);
+    url.searchParams.set('section_id', this.sectionId);
+    Object.keys(params).forEach(key => {
+      params[key].forEach(value => {
+        url.searchParams.append(key, value);
+      });
+    });
+    return url.toString();
+  }
+
+  handleFilterChange(event) {
+    const url = this.generateUrl();
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = setTimeout(() => {
+      this.fieldset.disabled = true;
+      fetch(url.toString())
+        .then(response => response.text())
+        .then(html => {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
+          const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
+          if (newSection && currentSection) {
+            currentSection.replaceWith(newSection);
+            const newUrl = new URL(url);
+            newUrl.searchParams.delete('section_id');
+            window.history.replaceState({}, '', newUrl);
+          }
+        })
+        .catch(error => console.error('Error fetching filter results:', error)).finally(() => {
+          this.fieldset.disabled = false;
+        });
+    }, 1000);
+
+
   }
 
 }
