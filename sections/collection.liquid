@@ -7,20 +7,36 @@
 
 <section class="pb-40">
   <div class="container">
-    <div class="grid md:grid-cols-[300px_auto] gap-5">
-      <div>
+    <collection-filters data-collection-handle="{{ collection.handle }}" data-section-id="{{ section.id }}">
+      <div class="grid md:grid-cols-[300px_auto] gap-5">
         <div>
-          <div class="border border-black/10 py-5 px-6 rounded-[20px]">
-            <div class="border-b border-b-black/10 pb-6 mb-6">
-              <h6 class="font-bold flex gap-2 justify-between items-center">
-                <span>Filters</span>
-                {% render 'icon', icon: 'filter', class: 'size-6' %}
-              </h6>
-            </div>
-            <collection-filters data-collection-handle="{{ collection.handle }}" data-section-id="{{ section.id }}">
+          <div>
+            <div class="border border-black/10 py-5 px-6 rounded-[20px]">
+              <div class="border-b border-b-black/10 pb-6 mb-6">
+                <h6 class="font-bold flex gap-2 justify-between items-center">
+                  <span>Filters</span>
+                  {% render 'icon', icon: 'filter', class: 'size-6' %}
+                </h6>
+              </div>
               <fieldset>
-                {% for filter in collection.filters %}
-                  <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion {% if filter.active_values.size > 0 %}accordion-open{% endif %}">
+                <div class="active-filters flex flex-wrap gap-2 mb-6 empty:hidden">
+                  {%- for filter in collection.filters -%}
+                    {%- for value in filter.active_values -%}
+                      <button
+                        type="button"
+                        data-remove-url="{{ value.url_to_remove }}"
+                        class="button small text-sm bg-gray-200 text-gray-500"
+                      >
+                        {{ value.label }} &times;
+                      </button>
+                    {%- endfor -%}
+                  {%- endfor -%}
+                </div>
+                {%- for filter in collection.filters -%}
+                  <filter-accordion
+                    id="accordion-{{ forloop.index }}"
+                    class="block {% unless forloop.last %} border-b border-b-black/10 {% endunless %} pb-6 mb-6 filter-accordion"
+                  >
                     <h6
                       href="{{ filter.url }}"
                       class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header"
@@ -28,10 +44,10 @@
                       <span>{{ filter.label }}</span>
                       {% render 'icon',
                         icon: 'down-chevron',
-                        class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
+                        class: 'size-3 transition-all rotate-180 in-[.accordion-closed]:rotate-0'
                       %}
                     </h6>
-                    <div class="overflow-hidden filter-accordion-content {% if filter.active_values.size == 0 %}h-0{% endif %}">
+                    <div class="overflow-hidden filter-accordion-content">
                       <div class="pt-5 flex flex-wrap gap-2">
                         {% if filter.type == 'list' or filter.type == 'boolean' %}
                           {% for value in filter.values %}
@@ -59,268 +75,122 @@
                               </div>
                             </div>
                           {% endfor %}
-                        {% else %}
-
+                        {% elsif filter.type == 'price_range' %}
+                          <div class="flex gap-4 items-center w-full">
+                            <span class="text-sm font-medium">Min: </span>
+                            <input
+                              class="w-36"
+                              type="range"
+                              oninput="this.nextElementSibling.value = '{{ cart.currency.symbol }} '+this.value"
+                              min="{{ filter.range_min | divided_by: 100 }}"
+                              max="{{ filter.range_max | divided_by: 100 }}"
+                              {% if filter.min_value.value %}
+                                value="{{ filter.min_value.value | divided_by: 100 }}"
+                              {% else %}
+                                value="0"
+                              {% endif %}
+                              name="{{ filter.min_value.param_name }}"
+                              placeholder="Min Price"
+                              value="{{ filter.active_values | where: 'param_name', filter.min_value.param_name | first | default: '' }}"
+                            >
+                            <output class="shrink-0 ml-auto inline-block">
+                              {{ cart.currency.symbol }}
+                              {{ filter.min_value.value | divided_by: 100 -}}
+                            </output>
+                          </div>
+                          <div class="flex gap-4 items-center w-full">
+                            <span class="text-sm font-medium">Max: </span>
+                            <input
+                              class="w-36"
+                              type="range"
+                              oninput="this.nextElementSibling.value = '{{ cart.currency.symbol }} '+this.value"
+                              min="{{ filter.range_min | divided_by: 100 }}"
+                              max="{{ filter.range_max | divided_by: 100 }}"
+                              name="{{ filter.max_value.param_name }}"
+                              {% if filter.max_value.value %}
+                                value="{{ filter.max_value.value | divided_by: 100 }}"
+                              {% else %}
+                                value="{{ filter.range_max | divided_by: 100 }}"
+                              {% endif %}
+                              placeholder="Max Price"
+                            >
+                            <output class="shrink-0 ml-auto inline-block">
+                              {{ cart.currency.symbol }}
+                              {%- if filter.max_value.value -%}
+                                {{ filter.max_value.value | divided_by: 100 }}
+                              {%- else -%}
+                                {{ filter.range_max | divided_by: 100 }}
+                              {%- endif -%}
+                            </output>
+                          </div>
                         {% endif %}
                       </div>
                     </div>
                   </filter-accordion>
-                {% endfor %}
+                {%- endfor -%}
               </fieldset>
-            </collection-filters>
-            <div class="border-b border-b-black/10 pb-6 mb-6">
-              <ul class=" flex flex-col gap-2">
-                <li>
-                  <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                    ><span>T-shirts</span>
-                    {% render 'icon', icon: 'right-chevron', class: 'size-3 text-black/60' %}
-                  </a>
-                </li>
-                <li>
-                  <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                    ><span>Shorts</span>
-                    {% render 'icon', icon: 'right-chevron', class: 'size-3 text-black/60' %}
-                  </a>
-                </li>
-                <li>
-                  <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                    ><span>Shirts</span>
-                    {% render 'icon', icon: 'right-chevron', class: 'size-3 text-black/60' %}
-                  </a>
-                </li>
-                <li>
-                  <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                    ><span>Hoodie</span>
-                    {% render 'icon', icon: 'right-chevron', class: 'size-3 text-black/60' %}
-                  </a>
-                </li>
-                <li>
-                  <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                    ><span>Jeans</span>
-                    {% render 'icon', icon: 'right-chevron', class: 'size-3 text-black/60' %}
-                  </a>
-                </li>
-              </ul>
             </div>
-            <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion accordion-open">
-              <h6 class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header">
-                <span>Price</span>
-                {% render 'icon',
-                  icon: 'down-chevron',
-                  class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
-                %}
-              </h6>
-              <div class="overflow-hidden filter-accordion-content">
-                <div class="pt-5">
-                  <input type="range" min="1" max="1000" value="50" class="slider">
-                  <div class="mt-1">50</div>
-                </div>
-              </div>
-            </filter-accordion>
-            <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion accordion-open">
-              <h6 class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header">
-                <span>Colors</span>
-                {% render 'icon',
-                  icon: 'down-chevron',
-                  class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
-                %}
-              </h6>
-              <div class="overflow-hidden filter-accordion-content">
-                <div class="pt-5">
-                  <div class="flex items-center gap-4 flex-wrap">
-                    <div class="radio">
-                      <input type="radio" name="color" checked id="brown" class="">
-                      <label for="brown" class="bg-amber-900" aria-label="Brown">
-                        <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor" />
-                        </svg>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <input type="radio" name="color" id="green" class="">
-                      <label for="green" class="bg-green-900" aria-label="Green">
-                        <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor" />
-                        </svg>
-                      </label>
-                    </div>
-                    <div class="radio">
-                      <input type="radio" name="color" id="blue" class="">
-                      <label for="blue" class="bg-blue-900" aria-label="Blue">
-                        <svg viewBox="0 0 13 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12.7826 1.2813L4.78255 9.2813C4.71287 9.35122 4.63008 9.4067 4.53891 9.44455C4.44775 9.48241 4.35001 9.50189 4.2513 9.50189C4.15259 9.50189 4.05485 9.48241 3.96369 9.44455C3.87252 9.4067 3.78973 9.35122 3.72005 9.2813L0.220051 5.7813C0.150286 5.71154 0.0949458 5.62871 0.0571893 5.53756C0.0194329 5.44641 1.03958e-09 5.34871 0 5.25005C-1.03958e-09 5.15139 0.0194329 5.05369 0.0571893 4.96254C0.0949458 4.87139 0.150286 4.78857 0.220051 4.7188C0.289816 4.64904 0.372638 4.5937 0.46379 4.55594C0.554942 4.51818 0.652639 4.49875 0.751301 4.49875C0.849963 4.49875 0.947659 4.51818 1.03881 4.55594C1.12996 4.5937 1.21279 4.64904 1.28255 4.7188L4.25193 7.68818L11.7213 0.220051C11.8622 0.0791546 12.0533 0 12.2526 0C12.4518 0 12.6429 0.0791546 12.7838 0.220051C12.9247 0.360947 13.0039 0.552044 13.0039 0.751301C13.0039 0.950558 12.9247 1.14165 12.7838 1.28255L12.7826 1.2813Z" fill="currentColor" />
-                        </svg>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </filter-accordion>
-            <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion accordion-open">
-              <h6 class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header">
-                <span>Size</span>
-                {% render 'icon',
-                  icon: 'down-chevron',
-                  class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
-                %}
-              </h6>
-              <div class="overflow-hidden filter-accordion-content">
-                <div class="pt-5">
-                  <div class="flex items-center gap-4 flex-wrap">
-                    <div class="radio-size">
-                      <input type="radio" name="size" id="small">
-                      <label for="small">Small</label>
-                    </div>
-                    <div class="radio-size">
-                      <input type="radio" name="size" id="medium">
-                      <label for="medium">Medium</label>
-                    </div>
-                    <div class="radio-size">
-                      <input type="radio" name="size" id="large">
-                      <label for="large">Large</label>
-                    </div>
-                    <div class="radio-size">
-                      <input type="radio" name="size" id="x-large">
-                      <label for="x-large">X-Large</label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </filter-accordion>
-            <filter-accordion class="block border-b border-b-black/10 pb-6 mb-6 filter-accordion accordion-open">
-              <h6 class="font-bold flex gap-2 justify-between items-center cursor-pointer filter-accordion-header">
-                <span>Dress style</span>
-                {% render 'icon',
-                  icon: 'down-chevron',
-                  class: 'size-3 transition-all in-[.accordion-open]:rotate-180'
-                %}
-              </h6>
-              <div class="overflow-hidden filter-accordion-content">
-                <div class="pt-5">
-                  <ul class=" flex flex-col gap-2">
-                    <li>
-                      <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                        ><span>T-shirts</span>
-                        <svg
-                          class="size-3 text-black/60"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1.28318 0.221294L6.28318 5.22129C6.3531 5.29097 6.40857 5.37377 6.44643 5.46493C6.48428 5.55609 6.50377 5.65383 6.50377 5.75254C6.50377 5.85126 6.48428 5.94899 6.44643 6.04016C6.40857 6.13132 6.3531 6.21412 6.28318 6.28379L1.28318 11.2838C1.14228 11.4247 0.951183 11.5038 0.751926 11.5038C0.552669 11.5038 0.361572 11.4247 0.220676 11.2838C0.0797797 11.1429 0.000625142 10.9518 0.000625142 10.7525C0.000625143 10.5533 0.0797797 10.3622 0.220676 10.2213L4.69005 5.75192L0.220051 1.28255C0.0791551 1.14165 1.25847e-07 0.950553 1.28223e-07 0.751295C1.30599e-07 0.552037 0.0791552 0.360941 0.220051 0.220045C0.360948 0.0791493 0.552044 -7.62281e-06 0.751301 -7.62044e-06C0.950559 -7.61806e-06 1.14166 0.0791493 1.28255 0.220045L1.28318 0.221294Z" fill="currentColor" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                        ><span>Shorts</span>
-                        <svg
-                          class="size-3 text-black/60"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1.28318 0.221294L6.28318 5.22129C6.3531 5.29097 6.40857 5.37377 6.44643 5.46493C6.48428 5.55609 6.50377 5.65383 6.50377 5.75254C6.50377 5.85126 6.48428 5.94899 6.44643 6.04016C6.40857 6.13132 6.3531 6.21412 6.28318 6.28379L1.28318 11.2838C1.14228 11.4247 0.951183 11.5038 0.751926 11.5038C0.552669 11.5038 0.361572 11.4247 0.220676 11.2838C0.0797797 11.1429 0.000625142 10.9518 0.000625142 10.7525C0.000625143 10.5533 0.0797797 10.3622 0.220676 10.2213L4.69005 5.75192L0.220051 1.28255C0.0791551 1.14165 1.25847e-07 0.950553 1.28223e-07 0.751295C1.30599e-07 0.552037 0.0791552 0.360941 0.220051 0.220045C0.360948 0.0791493 0.552044 -7.62281e-06 0.751301 -7.62044e-06C0.950559 -7.61806e-06 1.14166 0.0791493 1.28255 0.220045L1.28318 0.221294Z" fill="currentColor" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                        ><span>Shirts</span>
-                        <svg
-                          class="size-3 text-black/60"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1.28318 0.221294L6.28318 5.22129C6.3531 5.29097 6.40857 5.37377 6.44643 5.46493C6.48428 5.55609 6.50377 5.65383 6.50377 5.75254C6.50377 5.85126 6.48428 5.94899 6.44643 6.04016C6.40857 6.13132 6.3531 6.21412 6.28318 6.28379L1.28318 11.2838C1.14228 11.4247 0.951183 11.5038 0.751926 11.5038C0.552669 11.5038 0.361572 11.4247 0.220676 11.2838C0.0797797 11.1429 0.000625142 10.9518 0.000625142 10.7525C0.000625143 10.5533 0.0797797 10.3622 0.220676 10.2213L4.69005 5.75192L0.220051 1.28255C0.0791551 1.14165 1.25847e-07 0.950553 1.28223e-07 0.751295C1.30599e-07 0.552037 0.0791552 0.360941 0.220051 0.220045C0.360948 0.0791493 0.552044 -7.62281e-06 0.751301 -7.62044e-06C0.950559 -7.61806e-06 1.14166 0.0791493 1.28255 0.220045L1.28318 0.221294Z" fill="currentColor" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                        ><span>Hoodie</span>
-                        <svg
-                          class="size-3 text-black/60"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1.28318 0.221294L6.28318 5.22129C6.3531 5.29097 6.40857 5.37377 6.44643 5.46493C6.48428 5.55609 6.50377 5.65383 6.50377 5.75254C6.50377 5.85126 6.48428 5.94899 6.44643 6.04016C6.40857 6.13132 6.3531 6.21412 6.28318 6.28379L1.28318 11.2838C1.14228 11.4247 0.951183 11.5038 0.751926 11.5038C0.552669 11.5038 0.361572 11.4247 0.220676 11.2838C0.0797797 11.1429 0.000625142 10.9518 0.000625142 10.7525C0.000625143 10.5533 0.0797797 10.3622 0.220676 10.2213L4.69005 5.75192L0.220051 1.28255C0.0791551 1.14165 1.25847e-07 0.950553 1.28223e-07 0.751295C1.30599e-07 0.552037 0.0791552 0.360941 0.220051 0.220045C0.360948 0.0791493 0.552044 -7.62281e-06 0.751301 -7.62044e-06C0.950559 -7.61806e-06 1.14166 0.0791493 1.28255 0.220045L1.28318 0.221294Z" fill="currentColor" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/" class="flex gap-2 justify-between items-center text-black/60 py-1"
-                        ><span>Jeans</span>
-                        <svg
-                          class="size-3 text-black/60"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path d="M1.28318 0.221294L6.28318 5.22129C6.3531 5.29097 6.40857 5.37377 6.44643 5.46493C6.48428 5.55609 6.50377 5.65383 6.50377 5.75254C6.50377 5.85126 6.48428 5.94899 6.44643 6.04016C6.40857 6.13132 6.3531 6.21412 6.28318 6.28379L1.28318 11.2838C1.14228 11.4247 0.951183 11.5038 0.751926 11.5038C0.552669 11.5038 0.361572 11.4247 0.220676 11.2838C0.0797797 11.1429 0.000625142 10.9518 0.000625142 10.7525C0.000625143 10.5533 0.0797797 10.3622 0.220676 10.2213L4.69005 5.75192L0.220051 1.28255C0.0791551 1.14165 1.25847e-07 0.950553 1.28223e-07 0.751295C1.30599e-07 0.552037 0.0791552 0.360941 0.220051 0.220045C0.360948 0.0791493 0.552044 -7.62281e-06 0.751301 -7.62044e-06C0.950559 -7.61806e-06 1.14166 0.0791493 1.28255 0.220045L1.28318 0.221294Z" fill="currentColor" />
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </filter-accordion>
-            <div class="flex"><button class="button w-full">Apply Filter</button></div>
           </div>
         </div>
-      </div>
-      <div>
         <div>
-          <div class="mb-4 flex-col lg:flex-row flex lg:items-center justify-between gap-4">
-            <h1 class="h4 font-sans font-bold">{{ collection.title }}</h1>
-            <div class="flex flex-col lg:flex-row lg:items-center gap-3">
-              <span class="text-black/60">Showing 1-10 of 100 Products</span>
-              <div class="flex items-center gap-3">
-                <label class="text-black/60" for="sort">Sort by: </label>
-                <select name="sort" id="sort" class="ml-auto lg:ml-0">
-                  <option value="">Most Popular</option>
-                  <option value="">Best Rating</option>
-                  <option value="">Newest</option>
-                  <option value="">Price: Low to High</option>
-                  <option value="">Price: High to Low</option>
-                </select>
+          <div>
+            <div class="mb-4 flex-col lg:flex-row flex lg:items-center justify-between gap-4">
+              <h1 class="h4 font-sans font-bold">{{ collection.title }}</h1>
+              <div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                <span class="text-black/60"
+                  >Showing {{ collection.products_count -}}
+                  of {{ collection.all_products_count }} Products
+                </span>
+                <div class="flex items-center gap-3">
+                  <label class="text-black/60" for="sort">Sort by: </label>
+                  <select name="sort" class="sort ml-auto lg:ml-0">
+                    {% for option in collection.sort_options %}
+                      <option
+                        value="{{ option.value }}"
+                        {% if option.value == collection.sort_by %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ option.name }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-          {% paginate collection.products by 6 %}
-            <div class="grid md:grid-cols-3 xl:grid-cols-3 gap-5 mb-10">
-              {% for product in collection.products %}
-                {% render 'product-card', product: product %}
-                {% comment %}
-                  <div class="collection-product">
-                    {% if product.featured_image %}
-                      {% render 'image',
-                        class: 'collection-product__image',
-                        image: product.featured_image,
-                        url: product.url,
-                        width: 400,
-                        height: 400,
-                        crop: 'center'
-                      %}
-                    {% endif %}
-                    <div class="collection-product__content">
-                      <p>{{ product.title | escape | link_to: product.url }}</p>
-                      <p>{{ product.price | money }}</p>
+            {% paginate collection.products by 6 %}
+              <div class="grid md:grid-cols-3 xl:grid-cols-3 gap-5 mb-10">
+                {% for product in collection.products %}
+                  {% render 'product-card', product: product %}
+                  {% comment %}
+                    <div class="collection-product">
+                      {% if product.featured_image %}
+                        {% render 'image',
+                          class: 'collection-product__image',
+                          image: product.featured_image,
+                          url: product.url,
+                          width: 400,
+                          height: 400,
+                          crop: 'center'
+                        %}
+                      {% endif %}
+                      <div class="collection-product__content">
+                        <p>{{ product.title | escape | link_to: product.url }}</p>
+                        <p>{{ product.price | money }}</p>
+                      </div>
                     </div>
-                  </div>
-                {% endcomment %}
-              {% endfor %}
-            </div>
+                  {% endcomment %}
+                {% endfor %}
+              </div>
 
-            <div class="pagination">
-              {{- paginate | default_pagination -}}
-            </div>
-          {% endpaginate %}
+              <div class="pagination">
+                {{- paginate | default_pagination -}}
+              </div>
+            {% endpaginate %}
+          </div>
         </div>
       </div>
-    </div>
+    </collection-filters>
   </div>
 </section>
 

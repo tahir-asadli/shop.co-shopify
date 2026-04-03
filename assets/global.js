@@ -696,33 +696,33 @@ customElements.define('message-notification', MessageNotification);
 class FilterAccordion extends HTMLElement {
   constructor() {
     super();
-    this.summary = this.querySelector('.filter-accordion-header');
+    this.header = this.querySelector('.filter-accordion-header');
     this.content = this.querySelector('.filter-accordion-content');
-    this.handleSummaryClick = this.handleSummaryClick.bind(this);
+    this.handleHeaderClick = this.handleHeaderClick.bind(this);
   }
 
   connectedCallback() {
-    if (this.summary) {
-      this.summary.addEventListener('click', this.handleSummaryClick);
+    if (this.header) {
+      this.header.addEventListener('click', this.handleHeaderClick);
     }
   }
 
   disconnectedCallback() {
-    if (this.summary) {
-      this.summary.removeEventListener('click', this.handleSummaryClick);
+    if (this.header) {
+      this.header.removeEventListener('click', this.handleHeaderClick);
     }
   }
 
-  handleSummaryClick(event) {
+  handleHeaderClick(event) {
     event.preventDefault();
-    const isOpen = this.classList.contains('accordion-open');
-    if (isOpen) {
-      this.classList.remove('accordion-open');
-      this.content.style.height = '0';
-    } else {
+    const isClosed = this.classList.contains('accordion-closed');
+    if (isClosed) {
+      this.classList.remove('accordion-closed');
       const contentHeight = this.content.scrollHeight;
       this.content.style.height = contentHeight + 'px';
-      this.classList.add('accordion-open');
+    } else {
+      this.classList.add('accordion-closed');
+      this.content.style.height = '0';
     }
   }
 }
@@ -732,32 +732,112 @@ class CollectionFilters extends HTMLElement {
   constructor() {
     super();
     this.filterAccordions = this.querySelectorAll('filter-accordion');
+    this.formNotReady = false;
   }
 
   connectedCallback() {
     this.sectionId = this.dataset.sectionId;
+    this.sortEl = this.querySelector('.sort');
     this.fieldset = this.querySelector('fieldset');
     this.filterInputs = this.querySelectorAll('input[type="checkbox"]');
+    this.rangeFilterInputs = this.querySelectorAll('input[type="range"]');
+    this.activeFilters = this.querySelectorAll('.active-filters button');
+    this.paginationLinks = this.querySelectorAll('.pagination a');
     this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.handleSearchState = this.handleSearchState.bind(this);
+    this.removeFilter = this.removeFilter.bind(this);
     this.generateUrl = this.generateUrl.bind(this);
+    this.handlePaginationClick = this.handlePaginationClick.bind(this);
+    this.handleSortChange = this.handleSortChange.bind(this);
     this.timeoutId = null;
+
+    this.activeFilters.forEach(button => {
+      button.addEventListener('click', this.removeFilter);
+    });
+    this.paginationLinks.forEach(link => {
+      link.addEventListener('click', this.handlePaginationClick);
+    });
+
     this.filterInputs.forEach(input => {
       input.addEventListener('change', this.handleFilterChange);
     });
+    this.rangeFilterInputs.forEach(input => {
+      input.addEventListener('change', this.handleFilterChange);
+    });
+    this.addEventListener('mousedown', () => this.handleSearchState(true));
+    this.addEventListener('mouseup', () => this.handleSearchState(false));
+
+    this.sortEl.addEventListener('change', this.handleSortChange);
 
   }
+
+  handleSortChange(event) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort_by', event.currentTarget.value);
+    url.searchParams.set('section_id', this.sectionId);
+    this.fetchProducts(url);
+    url.searchParams.delete('section_id');
+    window.history.replaceState({}, '', url);
+  }
+
+  removeFilter(event) {
+    const button = event.currentTarget;
+    const dataRemoveURL = button.dataset.removeUrl;
+    if (dataRemoveURL) {
+      this.fieldset.disabled = true;
+      const newUrl = new URL(dataRemoveURL, window.location.origin);
+      console.log('newUrl', newUrl);
+      newUrl.searchParams.set('section_id', this.sectionId);
+      this.fetchProducts(newUrl);
+      newUrl.searchParams.delete('section_id');
+      window.history.replaceState({}, '', newUrl);
+    }
+
+  }
+
+  handlePaginationClick(event) {
+    event.preventDefault();
+    const link = event.currentTarget;
+    const newUrl = new URL(link.href);
+    newUrl.searchParams.set('section_id', this.sectionId);
+    this.fetchProducts(newUrl);
+    newUrl.searchParams.delete('section_id');
+    window.history.replaceState({}, '', newUrl);
+  }
+
+  handleSearchState(formState) {
+    this.formNotReady = formState;
+  }
+
   disconnectedCallback() {
-    const filterInputs = this.querySelectorAll('input[type="checkbox"]');
-    filterInputs.forEach(input => {
+    this.filterInputs.forEach(input => {
       input.removeEventListener('change', this.handleFilterChange);
+    });
+    this.rangeFilterInputs.forEach(input => {
+      input.removeEventListener('change', this.handleFilterChange);
+    });
+    this.activeFilters.forEach(button => {
+      button.removeEventListener('click', this.removeFilter);
+    });
+    this.removeEventListener('mousedown', () => this.handleSearchState(true));
+    this.removeEventListener('mouseup', () => this.handleSearchState(false));
+    this.paginationLinks.forEach(link => {
+      link.removeEventListener('click', this.handlePaginationClick);
     });
   }
 
   generateUrl() {
     const params = {};
-
     this.filterInputs.forEach(input => {
       if (input.checked) {
+        if (!params[input.name]) {
+          params[input.name] = [];
+        }
+        params[input.name].push(input.value);
+      }
+    });
+    this.rangeFilterInputs.forEach(input => {
+      if (input.value) {
         if (!params[input.name]) {
           params[input.name] = [];
         }
@@ -775,32 +855,54 @@ class CollectionFilters extends HTMLElement {
   }
 
   handleFilterChange(event) {
+    if (this.formNotReady) return;
     const url = this.generateUrl();
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
     this.timeoutId = setTimeout(() => {
+      if (this.formNotReady) return;
       this.fieldset.disabled = true;
-      fetch(url.toString())
-        .then(response => response.text())
-        .then(html => {
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = html;
-          const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
-          const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
-          if (newSection && currentSection) {
-            currentSection.replaceWith(newSection);
-            const newUrl = new URL(url);
-            newUrl.searchParams.delete('section_id');
-            window.history.replaceState({}, '', newUrl);
-          }
-        })
-        .catch(error => console.error('Error fetching filter results:', error)).finally(() => {
-          this.fieldset.disabled = false;
-        });
+
+      this.fetchProducts(url.toString());
     }, 1000);
+  }
 
+  fetchProducts(url) {
+    this.openAccordions = this.querySelectorAll('filter-accordion.accordion-closed');
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        const newSection = tempDiv.querySelector(`#shopify-section-${this.sectionId}`);
+        this.openAccordions.forEach(accordion => {
+          const accordionId = accordion.id;
 
+          const newAccordion = newSection.querySelector(`#${accordionId}`);
+          if (newAccordion) {
+            console.log('accordionId', accordionId, newAccordion);
+            newAccordion.classList.add('accordion-closed');
+            const content = newAccordion.querySelector('.filter-accordion-content');
+            content.classList.add('h-0');
+            console.log('after', newAccordion, content, content.scrollHeight);
+            if (content) {
+              // const contentHeight = content.scrollHeight;
+              // content.style.height = contentHeight + 'px';
+            }
+          }
+        });
+        const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);
+        if (newSection && currentSection) {
+          currentSection.replaceWith(newSection);
+          const newUrl = new URL(url);
+          newUrl.searchParams.delete('section_id');
+          window.history.replaceState({}, '', newUrl);
+        }
+      })
+      .catch(error => console.error('Error fetching filter results:', error)).finally(() => {
+        this.fieldset.disabled = false;
+      });
   }
 
 }
