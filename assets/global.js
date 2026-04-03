@@ -138,7 +138,8 @@ class ProductForm extends HTMLElement {
             message: 'Added to cart!',
           }, bubbles: true
         }));
-        // Optionally, you can update the cart UI here or show a success message.
+
+        document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
       })
       .catch(err => {
         document.dispatchEvent(new CustomEvent('show-notification', {
@@ -441,6 +442,8 @@ class ProductCard extends HTMLElement {
             message: 'Added to cart!',
           }, bubbles: true
         }));
+
+        document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
       })
       .catch(err => {
         console.error('Error adding to cart:', err);
@@ -565,6 +568,8 @@ class ProductCart extends HTMLElement {
               message: 'Cart updated!',
             }, bubbles: true
           }));
+
+          document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
         }
         this.formFieldset.disabled = false;
       })
@@ -653,11 +658,12 @@ class ShopNotifications extends HTMLElement {
 
   connectedCallback() {
     document.addEventListener('show-notification', (event) => {
-      const messageTemplate = `<message-notification class="message relative bg-{{ color }}-200 h-0 rounded-2xl transition-all duration-100 ease-in-out opacity-0 animate-fade-in [&.visible]:opacity-100">
-            <div class="message-text p-4">{{ text }}</div>
-            <button class="message-close absolute top-0.5 right-2">&times;</button>
-          </message-notification>`
-      const messageHTML = messageTemplate.replace('{{ text }}', event.detail?.message).replace('{{ color }}', event.detail?.type === 'success' ? 'green' : 'red');
+      const messageTemplate = `<message-notification class="message w-100 shadow-md relative bg-{{ color }}-300 text-{{ color }}-900 h-0 rounded-2xl transition-all duration-100 ease-in-out opacity-0 animate-fade-in [&.visible]:opacity-100">
+        <div class="message-text p-4">{{ text }}</div>
+        <button class="message-close absolute cursor-pointer top-2 right-2 flex items-center justify-center leading-none pb-0.75 font-bold bg-{{ color }}-400 text-{{ color }}-900 size-5 rounded-full">
+          &times;
+        </button></message-notification>`
+      const messageHTML = messageTemplate.replace('{{ text }}', event.detail?.message).replaceAll('{{ color }}', event.detail?.type === 'success' ? 'green' : 'red');
       this.messages.insertAdjacentHTML('beforeend', messageHTML);
     });
   }
@@ -913,3 +919,50 @@ class CollectionFilters extends HTMLElement {
 
 }
 customElements.define('collection-filters', CollectionFilters);
+
+class cartButton extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.cartButton = this.querySelector('.cart-button');
+    document.addEventListener('update-cart-button', () => {
+      if (!this.cartButton) return;
+      fetch(`${window.Shopify.routes.root}cart.js`)
+        .then(response => response.json())
+        .then(cart => {
+          this.cartButton.querySelector('sup') && (this.cartButton.querySelector('sup').innerHTML = cart.item_count);
+          this.cartButton.classList.add('animate-cart');
+          setTimeout(() => {
+            this.cartButton.classList.remove('animate-cart');
+          }, 500);
+        })
+        .catch(error => {
+          console.error('Error fetching cart:', error);
+        });
+
+    });
+  }
+
+  updateButton(itemCount) {
+    if (this.cartButton) {
+      this.cartButton.classList.add('animate-cart');
+      setTimeout(() => {
+        this.cartButton.classList.remove('animate-cart');
+      }, 300);
+    }
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('update-cart-button', this.updateButton);
+  }
+
+}
+customElements.define('cart-button', cartButton);
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   document.addEventListener('click', (event) => {
+//     document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
+//   });
+// });

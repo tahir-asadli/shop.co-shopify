@@ -17,8 +17,14 @@
 @source inline("lg:grid-cols-{1..30}");
 @source inline("xl:grid-cols-{1..30}");
 @source inline("gap-{1..10}");
-@source inline("bg-green-200");
-@source inline("bg-red-200");
+@source inline("bg-green-{300,400,500,900}");
+@source inline("bg-red-{300,400,500,900}");
+@source inline("bg-orange-{300,400,500,900}");
+@source inline("bg-yellow-{300,400,500,900}");
+@source inline("text-green-{300,400,500,900}");
+@source inline("text-red-{300,400,500,900}");
+@source inline("text-orange-{300,400,500,900}");
+@source inline("text-yellow-{300,400,500,900}");
 
 @theme {
   --font-sans: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -320,5 +326,21 @@
   }
   .splide.reviews .splide__arrows button {
     @apply static! bg-transparent! opacity-100!;
+  }
+  .animate-cart {
+    animation: jump 0.5s;
+  }
+}
+
+/* Jump animation */
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
