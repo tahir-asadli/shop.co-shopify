@@ -42,16 +42,7 @@
 
     {% sections 'footer-group' %}
 
-    <product-dialog>
-      <dialog class="rounded-2xl p-6 border border-gray-300">
-        <div class="dialog-content"></div>
-        <button id="close-dialog" class="absolute top-2 right-2 text-2xl">&times;</button>
-      </dialog>
-    </product-dialog>
-    <shop-notifications>
-      <div class="notification fixed bottom-4 right-4 z-5">
-        <div class="messages flex flex-col gap-2"></div>
-      </div>
-    </shop-notifications>
+    {% render 'product-dialog' %}
+    {% render 'shop-notifications' %}
   </body>
 </html>

@@ -182,10 +182,10 @@ class ProductGallery extends HTMLElement {
   updateMainImage(event) {
     const span = event.currentTarget;
     const thumbImage = span.querySelector('img');
-    const imageSrc = thumbImage.getAttribute('src');
-    const imageSrcSet = thumbImage.getAttribute('srcset');
+    const imageSrc = span.dataset.largeImage || thumbImage.src;
+    // const imageSrcSet = thumbImage.getAttribute('srcset');
     this.mainImage.src = imageSrc;
-    this.mainImage.srcset = imageSrcSet;
+    this.mainImage.srcset = imageSrc;
   }
 }
 customElements.define('product-gallery', ProductGallery);
@@ -468,6 +468,7 @@ class ProductDialog extends HTMLElement {
     this.closeButton = this.dialog.querySelector('#close-dialog');
 
     this.handleCloseButtonClick = this.handleCloseButtonClick.bind(this);
+    this.handleBackdropClick = this.handleBackdropClick.bind(this);
     this.closeButton.addEventListener('click', this.handleCloseButtonClick);
 
     document.body.addEventListener('product-dialog-open', (event) => {
@@ -485,6 +486,7 @@ class ProductDialog extends HTMLElement {
           const productForm = tempDiv.querySelector('#main-product');
           if (productForm) {
             this.dialog.querySelector('.dialog-content').innerHTML = productForm.outerHTML;
+            document.documentElement.classList.add('dialog-open');
             this.dialog.showModal();
           }
         })
@@ -500,16 +502,27 @@ class ProductDialog extends HTMLElement {
     });
     document.body.addEventListener('product-dialog-close', () => {
       this.dialog.close();
+      document.documentElement.classList.remove('dialog-open');
     });
+
+    this.dialog.addEventListener('click', this.handleBackdropClick);
 
   }
 
   disconnectedCallback() {
     this.closeButton.removeEventListener('click', this.handleCloseButtonClick);
+    this.dialog.removeEventListener('click', this.handleBackdropClick);
   }
 
   handleCloseButtonClick() {
     this.dialog.close();
+    document.documentElement.classList.remove('dialog-open');
+  }
+  handleBackdropClick(event) {
+    if (event.target === this.dialog) {
+      this.dialog.close();
+      document.documentElement.classList.remove('dialog-open');
+    }
   }
 }
 customElements.define('product-dialog', ProductDialog);
@@ -786,7 +799,6 @@ class CollectionFilters extends HTMLElement {
     if (dataRemoveURL) {
       this.fieldset.disabled = true;
       const newUrl = new URL(dataRemoveURL, window.location.origin);
-      console.log('newUrl', newUrl);
       newUrl.searchParams.set('section_id', this.sectionId);
       this.fetchProducts(newUrl);
       newUrl.searchParams.delete('section_id');
@@ -881,15 +893,9 @@ class CollectionFilters extends HTMLElement {
 
           const newAccordion = newSection.querySelector(`#${accordionId}`);
           if (newAccordion) {
-            console.log('accordionId', accordionId, newAccordion);
             newAccordion.classList.add('accordion-closed');
             const content = newAccordion.querySelector('.filter-accordion-content');
             content.classList.add('h-0');
-            console.log('after', newAccordion, content, content.scrollHeight);
-            if (content) {
-              // const contentHeight = content.scrollHeight;
-              // content.style.height = contentHeight + 'px';
-            }
           }
         });
         const currentSection = document.querySelector(`#shopify-section-${this.sectionId}`);

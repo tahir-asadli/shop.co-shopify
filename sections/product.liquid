@@ -10,31 +10,38 @@
 <script type="application/json" data-selected-variant>
   {{ product.selected_or_first_available_variant | json }}
 </script>
-<section section-id="{{ section.id }}" id="main-product" class="product-section py-10">
+<section section-id="{{ section.id }}" id="main-product" class="product-section pb-10 in-[dialog]:pb-0">
   <product-form>
     {% form 'product', product %}
       <fieldset>
         <input type="hidden" name="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
         <input type="hidden" name="id" value="{{ product.id }}">
-        <div class="container">
-          <div class="grid lg:grid-cols-2 gap-10">
+        <div class="container in-[dialog]:pl-0! in-[dialog]:pr-0!">
+          <div class="lg:grid lg:grid-cols-[500px_auto] xl:grid-cols-2 gap-10  lg:in-[dialog]:grid-cols-2!">
             <div>
               <product-gallery>
-                <div class="product-gallery grid lg:grid-cols-[152px_auto] gap-3.5">
-                  <div class="product-gallery-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 ">
-                    <div class="flex lg:block w-full gap-4.5">
+                <div class="product-gallery grid lg:grid-cols-[100px_auto] xl:grid-cols-[152px_auto] gap-3.5 mb-10 lg:mb-0 in-[dialog]:block!">
+                  <div class="product-gallery-thumbnails overflow-scroll h-full lg:max-h-142.5 scrollbar-hide order-1 lg:order-0 in-[dialog]:hidden">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:block w-full gap-4.5">
                       {% for image in product.images %}
-                        <span class="inline-block bg-gray-100 rounded-2xl h-42 relative cursor-pointer overflow-hidden shrink-0 grow-0 w-42 lg:w-full [&.active]:border [&.active]:border-black [&_img]:absolute [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
-                          {{ image | image_url: width: 168, height: 168 | image_tag }}
+                        <span
+                          data-large-image="{{ image | image_url: width: 1024, height: 1024 }}"
+                          class="inline-block bg-gray-100 rounded-md xl:rounded-2xl h-26 xl:h-42 relative cursor-pointer overflow-hidden lg:shrink-0 lg:grow-0 lg:w-full [&.active]:border [&.active]:border-black"
+                        >
+                          {{
+                            image
+                            | image_url: width: 168, height: 168, crop: 'top'
+                            | image_tag: class: 'absolute w-full h-full object-cover'
+                          }}
                         </span>
                       {% endfor %}
                     </div>
                   </div>
-                  <div class="[&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+                  <div class="max-h-142.5">
                     {{
                       product.featured_image
                       | image_url: width: 1024, height: 1024
-                      | image_tag: class: 'product-gallery-main-image'
+                      | image_tag: class: 'product-gallery-main-image w-full h-full object-cover rounded-2xl'
                     }}
                   </div>
                 </div>
@@ -67,7 +74,7 @@
                   >
                 {% endif %}
               </div>
-              <div class="border-b border-b-black/10 pb-5 mb-5">
+              <div class="in-[dialog]:hidden border-b border-b-black/10 pb-5 mb-5">
                 <p class="text-black/60">
                   {{ product.description }}
                 </p>

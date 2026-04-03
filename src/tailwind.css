@@ -49,7 +49,9 @@
   }
 
   html.mobile-menu-open,
-  html.mobile-menu-open body {
+  html.mobile-menu-open body,
+  html.dialog-open,
+  html.dialog-open body {
     @apply overflow-hidden h-full;
   }
 
