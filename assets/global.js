@@ -537,13 +537,17 @@ class ProductCart extends HTMLElement {
     this.formFieldset = this.form.querySelector('fieldset');
     this.quantityInputs = this.querySelectorAll("[data-quantity-input]");
     this.sectionId = this.dataset.sectionId;
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updateCartSection = this.updateCartSection.bind(this);
   }
 
   connectedCallback() {
-    this.form.addEventListener('submit', this.handleSubmit.bind(this));
+    this.form.addEventListener('submit', this.handleSubmit);
+    document.addEventListener('update-product-cart', this.updateCartSection);
   }
   disconnectedCallback() {
-    this.form.removeEventListener('submit', this.handleSubmit.bind(this));
+    this.form.removeEventListener('submit', this.handleSubmit);
+    document.removeEventListener('update-product-cart', this.updateCartSection);
   }
 
   updateCartSection() {
@@ -580,6 +584,8 @@ class ProductCart extends HTMLElement {
   }
 
   handleSubmit(event) {
+    console.log('handleSubmit(event) ');
+
     event.preventDefault();
     const formData = new FormData(this.form);
     this.formFieldset.disabled = true;
@@ -644,8 +650,15 @@ class CartProductItem extends HTMLElement {
     this.quantityInput.value = parseInt(this.quantityInput.value) + 1;
   }
 
-  handleRemoveClick() {
-    // Implement remove from cart functionality here
+  handleRemoveClick(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to remove this item from the cart?')) {
+      const url = this.removeButton.getAttribute('href');
+      fetch(url).finally(() => {
+        document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
+        this.removeButton.closest('cart-product-item').remove();
+      });
+    }
   }
 }
 customElements.define('cart-product-item', CartProductItem);
@@ -654,21 +667,25 @@ class ShopNotifications extends HTMLElement {
   constructor() {
     super();
     this.messages = this.querySelector('.messages');
+    this.showNotification = this.showNotification.bind(this);
   }
 
   connectedCallback() {
-    document.addEventListener('show-notification', (event) => {
-      const messageTemplate = `<message-notification class="message w-100 shadow-md relative bg-{{ color }}-300 text-{{ color }}-900 h-0 rounded-2xl transition-all duration-100 ease-in-out opacity-0 animate-fade-in [&.visible]:opacity-100">
-        <div class="message-text p-4">{{ text }}</div>
-        <button class="message-close absolute cursor-pointer top-2 right-2 flex items-center justify-center leading-none pb-0.75 font-bold bg-{{ color }}-400 text-{{ color }}-900 size-5 rounded-full">
-          &times;
-        </button></message-notification>`
-      const messageHTML = messageTemplate.replace('{{ text }}', event.detail?.message).replaceAll('{{ color }}', event.detail?.type === 'success' ? 'green' : 'red');
-      this.messages.insertAdjacentHTML('beforeend', messageHTML);
-    });
+    document.addEventListener('show-notification', this.showNotification);
   }
 
   disconnectedCallback() {
+    document.removeEventListener('show-notification', this.showNotification);
+  }
+
+  showNotification(event) {
+    const messageTemplate = `<message-notification class="message w-100 shadow-md relative bg-{{ color }}-300 text-{{ color }}-900 h-0 rounded-2xl transition-all duration-100 ease-in-out opacity-0 animate-fade-in [&.visible]:opacity-100">
+      <div class="message-text p-4">{{ text }}</div>
+      <button class="message-close absolute cursor-pointer top-2 right-2 flex items-center justify-center leading-none pb-0.75 font-bold bg-{{ color }}-400 text-{{ color }}-900 size-5 rounded-full">
+      &times;
+      </button></message-notification>`
+    const messageHTML = messageTemplate.replace('{{ text }}', event.detail?.message).replaceAll('{{ color }}', event.detail?.type === 'success' ? 'green' : 'red');
+    this.messages.insertAdjacentHTML('beforeend', messageHTML);
   }
 }
 customElements.define('shop-notifications', ShopNotifications);
@@ -961,8 +978,84 @@ class cartButton extends HTMLElement {
 }
 customElements.define('cart-button', cartButton);
 
+class DiscountForm extends HTMLElement {
+  constructor() {
+    super();
+    this.form = this.querySelector('form');
+    this.input = this.form.querySelector('input[name="discount"]');
+    this.errorMessage = this.querySelector('.error-message');
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  connectedCallback() {
+    console.log('connectedCallback');
+
+    this.form.addEventListener('submit', this.handleSubmit);
+  }
+
+  disconnectedCallback() {
+    console.log('disconnectedCallback');
+
+    this.form.removeEventListener('submit', this.handleSubmit);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const discountCode = this.input.value.trim();
+    if (discountCode === '') {
+      return;
+    }
+    fetch('/cart/update.js', {
+      method: 'POST',
+      body: JSON.stringify({
+        discount: discountCode
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(data => {
+            throw new Error(data.description || 'Could not apply discount');
+          });
+        }
+        return res.json();
+      })
+      .then(data => {
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'success',
+            message: 'Discount applied!',
+          }, bubbles: true
+        }));
+        document.dispatchEvent(new CustomEvent('update-product-cart', {
+          bubbles: true
+        }));
+
+      })
+      .catch(err => {
+        console.error('Error applying discount:', err);
+        document.dispatchEvent(new CustomEvent('show-notification', {
+          detail: {
+            type: 'error',
+            message: 'Could not apply discount',
+          }, bubbles: true
+        }));
+      });
+  }
+}
+customElements.define('discount-form', DiscountForm);
+
 // document.addEventListener('DOMContentLoaded', () => {
 //   document.addEventListener('click', (event) => {
-//     document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
+//     // display notification
+//     document.dispatchEvent(new CustomEvent('show-notification', {
+//       detail: {
+//         type: 'success',
+//         message: 'This is a notification!',
+//       }, bubbles: true
+//     }));
+//     // document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
 //   });
 // });

@@ -104,11 +104,11 @@
           <li>
             <cart-button>
               <a href="{{ routes.cart_url }}" class="relative inline-block cart-button">
-                {% if cart.item_count > 0 %}
-                  <sup class="text-xs absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-1 z-1 aspect-auto size-4">
-                    {{ cart.item_count }}
-                  </sup>
-                {% endif %}
+                <sup class="text-xs text-center absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-1 z-1 aspect-auto size-4 empty:hidden">
+                  {%- if cart.item_count != 0 -%}
+                    {{- cart.item_count -}}
+                  {%- endif -%}
+                </sup>
                 {% render 'icon', icon: 'cart', class: 'size-6' %}
               </a>
             </cart-button>
