@@ -1,12 +1,22 @@
 class Announcement extends HTMLElement {
   constructor() {
     super();
-    this.querySelector('button').addEventListener('click', this.onCloseButtonClick.bind(this));
+    this.closeButton = this.querySelector('button');
+    this.handleCloseButtonClick = this.handleCloseButtonClick.bind(this);
   }
 
-  onCloseButtonClick(event) {
-    const announcementElement = event.currentTarget.closest('.announcement');
-    announcementElement.remove();
+  connectedCallback() {
+    this.closeButton?.addEventListener('click', this.handleCloseButtonClick);
+    document.body.classList.add('has-announcement');
+  }
+
+  disconnectedCallback() {
+    this.closeButton?.removeEventListener('click', this.handleCloseButtonClick);
+    document.body.classList.remove('has-announcement');
+  }
+
+  handleCloseButtonClick(event) {
+    this.remove();
   }
 }
 customElements.define('announcement-bar', Announcement);
@@ -1096,19 +1106,3 @@ class MobileSearch extends HTMLElement {
   }
 }
 customElements.define('mobile-search', MobileSearch);
-// mobile-menu
-// mobile-search
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   document.addEventListener('click', (event) => {
-//     // display notification
-//     document.dispatchEvent(new CustomEvent('show-notification', {
-//       detail: {
-//         type: 'success',
-//         message: 'This is a notification!',
-//       }, bubbles: true
-//     }));
-//     // document.dispatchEvent(new CustomEvent('update-cart-button', { bubbles: true }));
-//   });
-// });
