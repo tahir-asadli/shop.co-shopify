@@ -1054,8 +1054,11 @@ class MobileMenu extends HTMLElement {
 
   connectedCallback() {
     this.menuButton = document.querySelector('#mobile-menu-button');
+    this.menuOverlay = document.querySelector('#mobile-menu-overlay');
+
     this.handleMenuButtonClick = this.handleMenuButtonClick.bind(this);
     this.menuButton.addEventListener('click', this.handleMenuButtonClick);
+    this.menuOverlay.addEventListener('click', this.handleMenuButtonClick);
   }
 
   disconnectedCallback() {
@@ -1068,6 +1071,31 @@ class MobileMenu extends HTMLElement {
 }
 customElements.define('mobile-menu', MobileMenu);
 
+class MobileSearch extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    console.log('connected');
+
+    this.menuButton = document.querySelector('#search-menu-button');
+    this.menuOverlay = document.querySelector('#search-menu-overlay');
+
+    this.handleMenuButtonClick = this.handleMenuButtonClick.bind(this);
+    this.menuButton.addEventListener('click', this.handleMenuButtonClick);
+    this.menuOverlay.addEventListener('click', this.handleMenuButtonClick);
+  }
+
+  disconnectedCallback() {
+    this.menuButton.removeEventListener('click', this.handleMenuButtonClick);
+  }
+
+  handleMenuButtonClick() {
+    document.documentElement.classList.toggle('search-menu-open')
+  }
+}
+customElements.define('mobile-search', MobileSearch);
 // mobile-menu
 // mobile-search
 

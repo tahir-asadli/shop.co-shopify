@@ -3,9 +3,17 @@
   <section class="fixed top-0 left-0 w-full h-0 overflow-hidden bg-white transition-all opacity-60 in-[.search-menu-open]:block in-[.search-menu-open]:opacity-100 in-[.search-menu-open]:h-35 in-[.search-menu-open]:shadow z-3 md:hidden">
     <div class="container flex flex-col justify-between h-full py-5">
       <h4 class="text-2xl font-medium mb-1 text-center">Search</h4>
-      <form action="">
+      <form action="{{ routes.search_url }}">
+        <input type="hidden" name="type" value="product,page">
+        <input type="hidden" name="options[unavailable_products]" value="hide">
         <div class="flex gap-2">
-          <input type="text" class="text-input text-black" placeholder="Search for products...">
+          <input
+            type="text"
+            placeholder="Search for products..."
+            name="q"
+            class="text-input pl-12"
+            value="{{ search.terms | escape }}"
+          >
           <button class="button">Search</button>
         </div>
       </form>
