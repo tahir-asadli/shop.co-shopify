@@ -74,19 +74,10 @@
               "blocks": {}
             }
           },
-          "block_order": [
-            "statistic_MEPYmG",
-            "statistic_BkJQUw",
-            "statistic_pJ6wWz"
-          ]
+          "block_order": ["statistic_MEPYmG", "statistic_BkJQUw", "statistic_pJ6wWz"]
         }
       },
-      "block_order": [
-        "heading_FUMbEB",
-        "text_EhFib9",
-        "button_PWVgxY",
-        "statistics_fVdccm"
-      ],
+      "block_order": ["heading_FUMbEB", "text_EhFib9", "button_PWVgxY", "statistics_fVdccm"],
       "name": "Hero",
       "settings": {
         "hero_image": "shopify://shop_images/hero.png"
@@ -136,13 +127,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "partner_mDBUwR",
-        "partner_z7Ty9P",
-        "partner_X4jWw8",
-        "partner_YXXXAY",
-        "partner_aCrJc3"
-      ],
+      "block_order": ["partner_mDBUwR", "partner_z7Ty9P", "partner_X4jWw8", "partner_YXXXAY", "partner_aCrJc3"],
       "name": "Partners Section",
       "settings": {}
     },
@@ -154,7 +139,7 @@
       }
     },
     "collections_HY8QfE": {
-      "type": "collections",
+      "type": "collection-list",
       "blocks": {
         "collection_Cye6M3": {
           "type": "_collection",
@@ -193,12 +178,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "collection_Cye6M3",
-        "collection_wtA4Mm",
-        "collection_eaL3K8",
-        "collection_qhpNLg"
-      ],
+      "block_order": ["collection_Cye6M3", "collection_wtA4Mm", "collection_eaL3K8", "collection_qhpNLg"],
       "name": "Collections",
       "settings": {
         "heading": "BROWSE BY DRESS STYLE"
@@ -248,12 +228,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "review_VmKe36",
-        "review_cjgGnK",
-        "review_Hq6kGj",
-        "review_VbUWwT"
-      ],
+      "block_order": ["review_VmKe36", "review_cjgGnK", "review_Hq6kGj", "review_VbUWwT"],
       "name": "Reviews",
       "settings": {
         "heading": "OUR HAPPY CUSTOMERS"
@@ -268,12 +243,5 @@
       }
     }
   },
-  "order": [
-    "hero_fgdeqD",
-    "partners_BfCpir",
-    "products_b3gb4U",
-    "collections_HY8QfE",
-    "reviews_jTU6iE",
-    "newsletter_Ldb8rt"
-  ]
+  "order": ["hero_fgdeqD", "partners_BfCpir", "products_b3gb4U", "collections_HY8QfE", "reviews_jTU6iE", "newsletter_Ldb8rt"]
 }

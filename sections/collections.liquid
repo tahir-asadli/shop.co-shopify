@@ -1,13 +1,36 @@
-<!-- Browse By Dress Style -->
-<section class="w-full">
-  <div class="container px-10! py-16 !md:px-18 bg-gray-100 rounded-4xl">
-    <!-- Section Heading -->
-    <div class="flex justify-center mb-16">
-      <h2 class="text-4xl md:text-5xl font-bold text-black font-anton">{{ section.settings.heading }}</h2>
-    </div>
-    <!-- Categories Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
-      {% content_for 'blocks' %}
+{% comment %}
+  This section is used in the list-collections template to render a list of
+  collections.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
+{% endcomment %}
+
+<section>
+  <div class="container pb-50">
+    <h1 class="h3 uppercase mb-3">Collections</h1>
+    <div class="py-3">
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-5 mb-10">
+        {% for collection in collections %}
+          <div class="rounded-2xl group">
+            <div class="bg-gray-100 rounded-2xl mb-2 relative">
+              {% if collection.image != blank %}
+                <a href="{{ collection.url }}">
+                  {% render 'image',
+                    image: collection.image,
+                    width: 270,
+                    height: 280,
+                    crop: 'top',
+                    class: 'w-full h-72 object-cover mb-4 rounded-2xl'
+                  %}
+                </a>
+              {% endif %}
+            </div>
+            <a href="{{ collection.url }}">
+              <h3 class="text-2xl font-bold mb-1">{{ collection.title }}</h3>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
@@ -15,23 +38,7 @@
 {% schema %}
 {
   "name": "Collections",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "BROWSE BY DRESS STYLE"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "_collection"
-    }
-  ],
-  "presets": [
-    {
-      "name": "Collections"
-    }
-  ]
+  "settings": [],
+  "presets": [{ "name": "Collections" }]
 }
 {% endschema %}

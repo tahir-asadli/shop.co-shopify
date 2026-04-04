@@ -1,0 +1,37 @@
+<!-- Browse By Dress Style -->
+<section class="w-full">
+  <div class="container px-10! py-16 !md:px-18 bg-gray-100 rounded-4xl">
+    <!-- Section Heading -->
+    <div class="flex justify-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-bold text-black font-anton">{{ section.settings.heading }}</h2>
+    </div>
+    <!-- Categories Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-6">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "BROWSE BY DRESS STYLE"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List"
+    }
+  ]
+}
+{% endschema %}
