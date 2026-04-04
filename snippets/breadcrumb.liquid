@@ -1,4 +1,4 @@
-{%- unless template == 'index' or template == 'list-collections' or template == '404' -%}
+{%- unless template == 'index' or template == '404' -%}
   {%- assign t = template | split: '.' | first -%}
   <!-- Breadcrumb -->
   <section>
@@ -22,6 +22,8 @@
               {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
               <a href="{{ tag_url }}" class="text-black!">{{ current_tags | join: ' + ' }}</a>
             {%- else -%}
+              <a href="{{ routes.collections_url }}">Collections</a>
+              {% render 'icon', icon: 'breadcrumb-arrow', class: 'size-2' %}
               <a href="{{ collection.url }}" class="text-black!">{{ collection.title }}</a>
             {%- endif -%}
           {%- when 'blog' -%}
