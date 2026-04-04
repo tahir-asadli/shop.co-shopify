@@ -1047,6 +1047,31 @@ class DiscountForm extends HTMLElement {
 }
 customElements.define('discount-form', DiscountForm);
 
+class MobileMenu extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this.menuButton = document.querySelector('#mobile-menu-button');
+    this.handleMenuButtonClick = this.handleMenuButtonClick.bind(this);
+    this.menuButton.addEventListener('click', this.handleMenuButtonClick);
+  }
+
+  disconnectedCallback() {
+    this.menuButton.removeEventListener('click', this.handleMenuButtonClick);
+  }
+
+  handleMenuButtonClick() {
+    document.documentElement.classList.toggle('mobile-menu-open')
+  }
+}
+customElements.define('mobile-menu', MobileMenu);
+
+// mobile-menu
+// mobile-search
+
+
 // document.addEventListener('DOMContentLoaded', () => {
 //   document.addEventListener('click', (event) => {
 //     // display notification

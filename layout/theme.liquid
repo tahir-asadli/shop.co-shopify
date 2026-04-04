@@ -35,7 +35,7 @@
     {{ content_for_header }}
   </head>
 
-  <body>
+  <body class="has-announcement">
     {% sections 'header-group' %}
     {% render 'breadcrumb' %}
     {{ content_for_layout }}
@@ -44,5 +44,7 @@
 
     {% render 'product-dialog' %}
     {% render 'shop-notifications' %}
+    {% render 'mobile-menu' %}
+    {% render 'mobile-search' %}
   </body>
 </html>
