@@ -12,9 +12,18 @@
     "main": {
       "type": "search",
       "settings": {}
+    },
+    "newsletter_MwMGNb": {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "settings": {
+        "heading": "STAY UPTO DATE ABOUT OUR LATEST OFFERS",
+        "button_label": "Subscribe to newsletter"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "newsletter_MwMGNb"
   ]
 }
