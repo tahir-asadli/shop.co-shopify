@@ -75,11 +75,8 @@ class ProductForm extends HTMLElement {
     this.quantityInput = this.form.querySelector(
       "input[name='quantity']"
     );
-    this.productIdInput = this.form.querySelector(
-      "input[name='id']"
-    );
     this.variantIdInput = this.form.querySelector(
-      "input[name='variant-id']"
+      "input[name='id']"
     );
 
     this.minusButton = this.querySelector("[data-quantity-minus]");

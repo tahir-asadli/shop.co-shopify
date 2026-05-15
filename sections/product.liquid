@@ -14,8 +14,8 @@
   <product-form>
     {% form 'product', product %}
       <fieldset>
-        <input type="hidden" name="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
-        <input type="hidden" name="id" value="{{ product.id }}">
+        <input type="hidden" name="id" id="variant-id" value="{{ product.selected_or_first_available_variant.id }}">
+        {% comment %} <input type="hidden" name="id" value="{{ product.id }}"> {% endcomment %}
         <div class="container in-[dialog]:pl-0! in-[dialog]:pr-0!">
           <div class="lg:grid lg:grid-cols-[500px_auto] xl:grid-cols-2 gap-10  lg:in-[dialog]:grid-cols-2!">
             <div>
@@ -79,12 +79,6 @@
                   {{ product.description }}
                 </p>
               </div>
-              <input
-                type="hidden"
-                name="id"
-                id="variant-id"
-                value="{{ product.selected_or_first_available_variant.id }}"
-              >
               {%- unless product.has_only_default_variant -%}
                 <variant-picker
                   data-section-id="{{ section.id }}"
